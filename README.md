@@ -20,12 +20,15 @@ In this project:
 
 The goal is to understand **how matching works**, not stock names.
 
---- 
+---
 
 ## What Kind of Orders Are Allowed?
-This simulator accepts **only one type of order**.
 
-### Limit Orders
+This simulator supports **two simple order types**.
+
+---
+
+### 1. Limit Orders
 
 A limit order means:
 - You choose the **price**
@@ -35,9 +38,28 @@ Examples:
 - “I want to BUY 10 units at price 100”
 - “I want to SELL 5 units at price 98”
 
-There are **no other order types**.
+Limit orders are stored in the system and wait until a matching order arrives.
 
-This is done intentionally to keep the project simple and easy to understand.
+---
+
+### 2. Market Orders
+
+A market order means:
+- You choose **only the quantity**
+- You do **not choose the price**
+
+Examples:
+- “BUY 10 units at market price”
+- “SELL 5 units at market price”
+
+What this means:
+- The order is executed **immediately**
+- It matches with the **best available opposite orders**
+- The final price depends on what is available in the system
+
+> A market order guarantees **execution**, not **price**.
+
+Market orders are used when **speed is more important than price**.
 
 ---
 
@@ -51,7 +73,10 @@ A trade happens when:
 ```bash
 If buyer’s price ≥ seller’s price → trade happens
 ```
-If this condition is not satisfied, the orders simply wait.
+
+For **market orders**, this check is automatic because the order accepts the best available price.
+
+If the condition is not satisfied (for limit orders), the orders simply wait.
 
 ---
 
@@ -81,7 +106,7 @@ It checks orders **one by one** and follows the same rules every time.
 
 ---
 
-### Example 1: No Trade Happens
+### Example 1: No Trade Happens (Limit Orders)
 
 1. BUY 10 units at price 100  
 2. SELL 5 units at price 110  
@@ -96,7 +121,7 @@ Both orders wait.
 
 ---
 
-### Example 2: Trade Happens
+### Example 2: Trade Happens (Limit Orders)
 
 3. SELL 6 units at price 95  
 
@@ -115,7 +140,24 @@ Remaining:
 
 ---
 
-### Example 3: Same Price, Earlier Order First
+### Example 3: Market Order Execution
+
+Waiting orders:
+- SELL 5 units at price 98
+- SELL 5 units at price 100
+
+New order:
+- BUY 8 units at **market price**
+
+What happens:
+- Match with SELL 98 → 5 units
+- Match with SELL 100 → 3 units
+
+The market order is completed immediately using the best available prices.
+
+---
+
+### Example 4: Same Price, Earlier Order First
 
 Orders come in this order:
 1. BUY 5 units at price 100  
@@ -132,7 +174,7 @@ Earlier order gets priority.
 
 ---
 
-### Example 4: One Order Matches Many Orders
+### Example 5: One Order Matches Many Orders
 
 Waiting BUY orders:
 - BUY 5 at price 105
@@ -159,7 +201,9 @@ An order can be:
 
 If quantity is left:
 - It stays in the system
-- It waits for future matching orders
+- It waits for future matching orders (only for limit orders)
+
+Market orders never wait. Any unfilled quantity is simply not executed.
 
 ---
 
@@ -167,7 +211,7 @@ If quantity is left:
 
 - There is **only ONE stock**
 - We do **not track different users**
-- Orders are processed **one after another**
+- Orders are processed **one by one**
 - Everything happens **step by step**
 
 This is **not a real multi-user trading system**.  
@@ -222,4 +266,3 @@ To keep learning simple, this project does **not** include:
 - Complex order types
 
 All of this is avoided on purpose.
-
