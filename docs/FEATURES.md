@@ -40,7 +40,7 @@ Market orders:
 - Do **not specify a price**
 - Match against the **best available opposite orders**
 - May generate **multiple trades**
-- Do **not rest*- in the order book
+- Do *not rest* - in the order book
 - Any unfilled quantity is **discarded**
 
 **Market orders guarantee execution, not price**.
@@ -383,4 +383,116 @@ Supports both limit and market orders
 
 - Pending limit orders persisted only during shutdown
 
-**That's it**
+## L. Multi-User Simulation Model (Single Engine + IPC Clients)
+
+The simulator supports **multiple users trading from a single machine** using a **single matching engine process** and **multiple client processes** communicating via **Inter-Process Communication (IPC)**.\
+
+```bash
+Terminal 1 ── client.py ─┐
+Terminal 2 ── client.py ─┼──► engine.py (ONE process)
+Terminal 3 ── client.py ─┘        |
+                                  ├─ Order Book (in memory)
+                                  ├─ Matching Engine
+                                  └─ Trade Ledger
+```
+This design closely mirrors real exchange architecture while remaining simple, deterministic, and suitable for learning.
+
+---
+
+### L1. Single Matching Engine (Authoritative State)
+
+- The **matching engine runs as one dedicated process**
+- The engine exclusively owns:
+  - The in-memory order book
+  - Matching logic
+  - Trade generation
+- The order book **never lives inside client processes**
+
+This guarantees:
+- One source of truth
+- No duplicated state
+- No race conditions
+
+---
+
+### L2. Multiple Clients via IPC
+
+- Each user runs a separate **client process** (`client.py`)
+- Clients communicate with the engine using **IPC (local sockets)**
+- All communication happens on the same machine (`localhost`)
+
+Example:
+
+```bash
+python engine.py
+python client.py --user User_A
+python client.py --user User_B
+python client.py --user User_C
+```
+
+Each client:
+- Acts as an independent trader
+- Has its own `user_id`
+- Sends orders to the engine
+- Never directly accesses the order book
+
+---
+
+### L3. Why IPC (Local Sockets)
+
+IPC using localhost sockets is chosen because it:
+
+- Keeps the order book **fully in memory**
+- Allows **multiple processes** to interact safely
+- Avoids shared-memory complexity
+- Is extremely fast on a single machine
+- Matches real exchange client–gateway–engine models
+
+There is **no internet usage** and **no network latency**.
+
+---
+
+### L4. Order Submission Flow
+
+1. Client creates an order:
+   - `user_id`
+   - Side (BUY / SELL)
+   - Type (LIMIT / MARKET)
+   - Quantity
+   - Price (limit orders only)
+
+2. Client sends the order to the engine via IPC
+
+3. Engine:
+   - Validates the order
+   - Assigns order ID and timestamp
+   - Runs matching logic
+   - Updates the in-memory order book
+   - Appends trades to the trade ledger
+
+Clients are **stateless** and only submit requests.
+
+---
+
+### L5. Deterministic Multi-User Behavior
+
+Even with multiple users:
+
+- Orders are processed **one at a time**
+- No concurrency exists inside the engine
+- Execution order is fully deterministic
+
+Same submission sequence → same trades
+
+---
+
+### L6. Intentional Design Choice
+
+This model is intentionally selected because it:
+
+- Reflects real exchange architecture
+- Keeps focus on **matching logic**, not infrastructure
+- Is easy to test and debug
+- Scales conceptually to real systems
+
+This is a **learning-oriented exchange simulator**, not a production trading platform.
