@@ -4,7 +4,7 @@ import json
 class TCPClient:
     """
     TCP client to send orders to the Exchange Engine and receive responses.
-    Each client represents a single user session.
+    Each client represents a single user ses  sion.
     """
 
     def __init__(self, host: str = "localhost", port: int = 9000):
