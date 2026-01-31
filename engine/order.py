@@ -37,7 +37,7 @@ class Order:
         self.timestamp = timestamp
         self.order_type = order_type
 
-        # Order status: NEW → PARTIALLY_FILLED → FILLED
+        # Order status: NEW -> PARTIALLY_FILLED -> FILLED
         self.status = "NEW"
 
     def apply_fill(self, filled_quantity: int):
@@ -46,7 +46,10 @@ class Order:
 
         Updates remaining quantity and status.
         This method must be called whenever a trade occurs.
-
+        ex:-
+            if the order was originally had 10 quantity and now it has
+            remaining quantities of < 10 & not equal to 0 then it should mark the
+            order as PARTIALLY_FILLED and if it becomes 0 then FILLED
         Parameters:
             filled_quantity (int): Quantity filled in a trade
         """

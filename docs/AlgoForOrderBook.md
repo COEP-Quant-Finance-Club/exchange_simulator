@@ -61,3 +61,49 @@ Steps:
   - Update remaining quantities for both orders.
   - Remove the BUY order from the book if fully filled.
   - Record the trade.
+
+
+In the **match_market_buy**() 
+
+### Algorithm:
+
+#### Match the incoming buy orders against the existing sell orders 
+
+steps: 
+
+- Initialize Trades List
+
+- Create an empty list to store executed trades for this order.
+
+- Check sell Book
+
+- while incoming orders has quantity and the sell book is not empty:
+    - take the topmost sell order from the sell_orders book
+    - Execute a trade for the minimum available quantity.
+    - Update remaining quantities for both orders.
+    - Remove the sell order from the book if fully filled.
+    - Record the trade.
+
+
+
+In the **match_market_sell**()
+
+### Algorithm:
+
+#### Match the incoming sell orders against the existing buy orders
+
+steps:
+- Initialize Trades List
+
+- Create an empty list to store executed trades for this order.
+
+- Check Buy Book
+
+- while incoming orders has quantity and the buy book is not empty:
+    - take the topmost buy order from the buy_orders book
+    - Execute a trade for the minimum available quantity.
+    - Update remaining quantities for both orders.
+    - Remove the BUY order from the book if fully filled.
+    - Record the trade.
+- after while loop return the trades array.
+
