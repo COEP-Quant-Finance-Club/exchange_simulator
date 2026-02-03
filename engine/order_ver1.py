@@ -98,7 +98,7 @@ class Order:
         if self.remaining_quantity != 0:
             return True 
         else: 
-            retur False
+            return False
         pass
 
     def __repr__(self) -> str:
@@ -107,5 +107,10 @@ class Order:
         """
         return f"Your order details are 
         Order Id: {order_id}
-        User: {user}" # what else should I add in this string representation 
+        User: {user}
+        Side: {side},
+        Quantity: {quantity},
+        price: {price},
+        timestamp: {timestamp},
+        order_type:" # what else should I add in this string representation 
         pass
