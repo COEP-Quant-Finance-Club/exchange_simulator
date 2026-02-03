@@ -53,7 +53,21 @@ class Order:
         Parameters:
             filled_quantity (int): Quantity filled in a trade
         """
-        pass
+    
+    
+    self.remaining_quantity -= filled_quantity
+
+    # status update
+    if self.remaining_quantity == 0:
+        self.status = "FILLED"
+    else: 
+        self.remaining_quantity < self.quantity:
+        self.status = "PARTIALLY_FILLED"
+
+
+    return self.status
+
+        
 
     def is_filled(self) -> bool:
         """
@@ -62,7 +76,12 @@ class Order:
         Returns:
             bool: True if remaining_quantity == 0
         """
-        pass
+        if self.remaining_quantity == 0 :
+            return True 
+        else : 
+            return False 
+        
+    
 
     def is_active(self) -> bool:
         """
@@ -71,10 +90,24 @@ class Order:
         Returns:
             bool: True if order is not fully filled
         """
-        pass
+        if self.remaining_quantity != 0:
+            return True 
+        else: 
+            return False
+        
 
     def __repr__(self) -> str:
         """
         Developer-friendly string representation of the order.
         """
-        pass
+       
+        return (
+        f"Order(order_id={self.order_id}, "
+        f"user={self.user!r}, "
+        f"side={self.side!r}, "
+        f"quantity={self.quantity}, "
+        f"price={self.price}, "
+        f"timestamp={self.timestamp}, "
+        f"order_type={self.order_type!r})"
+        )
+
