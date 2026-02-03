@@ -53,22 +53,17 @@ class Order:
         Parameters:
             filled_quantity (int): Quantity filled in a trade
         """
-    if filled_quantity <= 0:
-        return "filled_quantity must be positive"
-
-    if filled_quantity > self.remaining_quantity:
-        return "filled_quantity cannot exceed remaining_quantity"
-
+    
     
     self.remaining_quantity -= filled_quantity
 
     # status update
     if self.remaining_quantity == 0:
         self.status = "FILLED"
-    elif self.remaining_quantity < self.quantity:
+    else: 
+        self.remaining_quantity < self.quantity:
         self.status = "PARTIALLY_FILLED"
-    else:
-        self.status = "NEW"
+
 
     return self.status
 
@@ -105,12 +100,14 @@ class Order:
         """
         Developer-friendly string representation of the order.
         """
-        return f"Your order details are 
-        Order Id: {order_id}
-        User: {user}
-        Side: {side},
-        Quantity: {quantity},
-        Price: {price},
-        Timestamp: {timestamp},
-        Order Type:{order_type}" 
-        
+       
+        return (
+        f"Order(order_id={self.order_id}, "
+        f"user={self.user!r}, "
+        f"side={self.side!r}, "
+        f"quantity={self.quantity}, "
+        f"price={self.price}, "
+        f"timestamp={self.timestamp}, "
+        f"order_type={self.order_type!r})"
+        )
+
