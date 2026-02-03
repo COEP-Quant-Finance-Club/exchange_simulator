@@ -33,7 +33,7 @@ class Order:
         self.side = side
         self.price = price
         self.quantity = quantity
-        self.remaining_quantity = remaining_quantity
+        self.remaining_quantity = quantity
         self.timestamp = timestamp
         self.order_type = order_type
 
@@ -60,7 +60,7 @@ class Order:
         return "filled_quantity cannot exceed remaining_quantity"
 
     
-    self.remaining_quantity = self.quantity - filled_quantity
+    self.remaining_quantity -= filled_quantity
 
     # status update
     if self.remaining_quantity == 0:
@@ -72,7 +72,7 @@ class Order:
 
     return self.status
 
-        pass
+        
 
     def is_filled(self) -> bool:
         """
@@ -86,7 +86,7 @@ class Order:
         else : 
             return False 
         
-        pass
+    
 
     def is_active(self) -> bool:
         """
@@ -99,7 +99,7 @@ class Order:
             return True 
         else: 
             return False
-        pass
+        
 
     def __repr__(self) -> str:
         """
@@ -110,7 +110,7 @@ class Order:
         User: {user}
         Side: {side},
         Quantity: {quantity},
-        price: {price},
-        timestamp: {timestamp},
-        order_type:" # what else should I add in this string representation 
-        pass
+        Price: {price},
+        Timestamp: {timestamp},
+        Order Type:{order_type}" 
+        
