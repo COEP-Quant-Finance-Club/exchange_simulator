@@ -55,17 +55,16 @@ class Order:
         """
     
     
-    self.remaining_quantity -= filled_quantity
+        self.remaining_quantity -= filled_quantity
 
-    # status update
-    if self.remaining_quantity == 0:
-        self.status = "FILLED"
-    else: 
-        self.remaining_quantity < self.quantity:
-        self.status = "PARTIALLY_FILLED"
+        # status update
+        if self.remaining_quantity == 0:
+            self.status = "FILLED"
+        else:
+            self.status = "PARTIALLY_FILLED"
 
 
-    return self.status
+        return self.status
 
         
 

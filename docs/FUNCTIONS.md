@@ -1,7 +1,58 @@
-# Exchange Simulator – File-Level Responsibilities (Developer Guide)
+# Exchange Simulator
 
-This document explains **what each file is responsible for**, what logic **must be implemented there**, and what **must not be implemented there**.  
-The goal is that **any developer can open a file and immediately know what to build**.
+A **simplified electronic exchange simulator** that models how real-world trading engines work.
+The system supports limit and market orders, price–time priority matching, partial fills,
+persistent order recovery across restarts, and real-time client notifications for executed trades.
+
+The primary goal of this project is **clean architecture and separation of responsibilities**,
+so that any developer can understand *what goes where* immediately.
+
+---
+
+## High-Level Architecture
+```
+Client (CLI)
+↓
+TCP Client
+↓
+TCP Server
+↓
+Exchange Engine
+├── OrderBook (matching logic)
+├── TradeWriter (async trade persistence)
+├── OrderStore (order recovery)
+└── Logger (audit logs)
+```
+---
+
+## Core Concepts
+
+- Orders are matched using **price–time priority**
+- Orders can be **partially filled**
+- Trades are **immutable and append-only**
+- Active orders are **persisted on shutdown**
+- Order book is **restored on startup**
+- Clients are **notified when their orders are executed**
+
+---
+
+## Supported Features
+
+- BUY / SELL orders
+- LIMIT orders
+- MARKET orders
+- Partial fills
+- Multiple matches per order
+- Persistent order book
+- Asynchronous trade logging
+- Per-user audit logs
+- Terminal-based client UI
+
+---
+
+## Project Structure & Responsibilities
+
+This section defines **exactly what belongs where**.
 
 ---
 
@@ -10,37 +61,29 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `README.md`
 
 **Purpose**
-- Public-facing entry point for the project.
+- Public-facing documentation
 
 **Responsibilities**
-- Describe what the Exchange Simulator is
-- High-level architecture overview
-- How to run:
-  - Start engine
-  - Start client
-  - Start simulation mode
-- Supported order types
-- Key assumptions & limitations
+- Describe the exchange simulator
+- Explain high-level architecture
+- How to run the engine, client, and simulator
+- Explain persistence & recovery behavior
 
-**Must NOT contain**
-- Deep implementation details
-- Business logic
+**Must NOT**
+- Contain business logic
+- Contain implementation details
 
 ---
 
 ### `tasks.md`
 
 **Purpose**
-- Internal development roadmap.
+- Internal development roadmap
 
 **Responsibilities**
 - Pending features
-- Known limitations
 - Refactor notes
-- Future enhancements (market orders, persistence, multi-instrument, etc.)
-
-**Audience**
-- Developers only
+- Future enhancements
 
 ---
 
@@ -49,7 +92,7 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `client/client.py`
 
 **Purpose**
-- Terminal-based user interaction (UI layer).
+- Terminal-based user interface
 
 **Responsibilities**
 - Parse CLI arguments (`--user Alice`)
@@ -57,19 +100,16 @@ The goal is that **any developer can open a file and immediately know what to bu
   - BUY / SELL
   - Price
   - Quantity
-- Display responses from engine
-- Show order confirmation and trade execution messages
-
-**Owns**
-- User input handling
-- Input validation (basic)
-- Display formatting
+- Display:
+  - Order accepted / rejected messages
+  - Trade execution notifications
+  - Execution price and quantity
 
 **Must NOT**
 - Match orders
 - Generate order IDs
 - Modify order book
-- Decide order status
+- Persist data
 
 > This file is a **dumb UI**, not a decision-maker.
 
@@ -78,7 +118,7 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `client/session_manager.py`
 
 **Purpose**
-- Manage **session-level order history** for a single user.
+- Maintain **per-user session order history**
 
 **Responsibilities**
 - Create `orders_userX.json` if missing
@@ -86,14 +126,10 @@ The goal is that **any developer can open a file and immediately know what to bu
 - Update order status (`PARTIALLY_FILLED`, `FILLED`)
 - Load existing session orders on startup
 
-**Owns**
-- Session JSON file I/O
-- Mapping order_id → order status
-
 **Must NOT**
 - Match orders
-- Calculate trade prices
-- Handle socket communication
+- Calculate prices
+- Handle sockets
 
 ---
 
@@ -102,22 +138,18 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `networking/tcp_client.py`
 
 **Purpose**
-- Client-side TCP communication abstraction.
+- Client-side TCP communication
 
 **Responsibilities**
 - Open TCP connection to engine
-- Serialize order to JSON
-- Send order to engine
-- Receive engine response
-- Deserialize response for `client.py`
-
-**Owns**
-- Client-side sockets
-- JSON serialization/deserialization
+- Serialize orders to JSON
+- Send orders to engine
+- Receive responses
+- Deserialize responses for client UI
 
 **Must NOT**
 - Prompt user
-- Store session data
+- Persist data
 - Implement matching logic
 
 ---
@@ -125,18 +157,14 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `networking/tcp_server.py`
 
 **Purpose**
-- Engine-side TCP server gateway.
+- Engine-side TCP gateway
 
 **Responsibilities**
 - Start TCP server
-- Accept multiple client connections
+- Accept multiple clients
 - Receive order JSON
-- Forward order to `engine.py`
-- Send engine response back to client
-
-**Owns**
-- Socket lifecycle
-- Client connection handling
+- Forward orders to engine
+- Send engine responses back to clients
 
 **Must NOT**
 - Match orders
@@ -152,23 +180,19 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `engine/engine.py`
 
 **Purpose**
-- Core matching engine (the brain of the exchange).
+- Core matching engine (the brain)
 
 **Responsibilities**
 - Receive validated orders
 - Assign:
   - `order_id`
   - timestamp
-- Decide if order matches immediately
-- Call `orderbook` for matching
-- Generate trades
+- Route orders to the order book
+- Coordinate matching
 - Update order status
-- Build response messages for client
-
-**Owns**
-- Order lifecycle
-- Matching workflow
-- Trade coordination
+- Generate trade objects
+- Build structured responses for clients
+- Notify affected users when trades occur
 
 **Must NOT**
 - Perform file I/O directly
@@ -180,10 +204,10 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `engine/order.py`
 
 **Purpose**
-- Define the **Order** data model.
+- Define the **Order** data model
 
 **Responsibilities**
-- Order attributes:
+- Store order attributes:
   - order_id
   - user
   - side
@@ -192,52 +216,40 @@ The goal is that **any developer can open a file and immediately know what to bu
   - remaining_quantity
   - status
   - timestamp
-- Order state transitions
-
-**Owns**
-- Order behavior and state
+- Handle order state transitions
 
 **Must NOT**
 - Match orders
 - Access order book
 - Read/write files
 
-> Pure **data + behavior**.
-
 ---
 
 ### `engine/orderbook.py`
 
 **Purpose**
-- Maintain unmatched orders and execute matching.
+- Maintain unmatched orders and execute matching
 
 **Responsibilities**
 - Maintain:
   - BUY max-heap
   - SELL min-heap
-- Enforce price-time priority
-- Match incoming orders
+- Enforce price–time priority
+- Execute matches
 - Update remaining quantities
 - Return executed trades
-
-**Owns**
-- Matching mechanics
-- Heap operations
-- FIFO ordering at same price
 
 **Must NOT**
 - Generate order IDs
 - Persist trades
 - Communicate with clients
 
-> This is **pure market logic**.
-
 ---
 
 ### `engine/trade.py`
 
 **Purpose**
-- Define executed trade structure.
+- Define executed trade structure
 
 **Responsibilities**
 - Trade attributes:
@@ -248,64 +260,52 @@ The goal is that **any developer can open a file and immediately know what to bu
   - quantity
   - timestamp
 
-**Owns**
-- Trade object creation
-
 **Must NOT**
 - Persist trades
 - Decide matching logic
 
 ---
 
-## 5. Simulation (`simulation/`)
+## 5. Persistence & Storage (`storage/`)
 
-### `simulation/simulator.py`
+### `storage/order_store.py`
 
 **Purpose**
-- Automated order generation for testing and demos.
+- Persist active orders and restore order book state
 
 **Responsibilities**
-- Generate random BUY/SELL orders
-- Randomize price and quantity
-- Send orders via TCP client
-- Simulate real clients
-
-**Owns**
-- Random order generation
-- Timing control
+- Save `NEW` and `PARTIALLY_FILLED` orders on shutdown
+- Load persisted orders on startup
+- Reconstruct Order objects
+- Provide snapshot-based recovery
 
 **Must NOT**
-- Modify engine internals
 - Match orders
+- Modify order state
+- Handle sockets
 
 ---
 
-## 6. Storage (`storage/`)
-
-### `storage/session_orders/orders_userX.json`
+### `storage/trade_writer.py`
 
 **Purpose**
-- Per-user session order history.
+- Asynchronous trade persistence
 
-**Written by**
-- `session_manager.py`
+**Responsibilities**
+- Append executed trades to `trades.json`
+- Run in background (non-blocking)
+- Ensure append-only guarantees
 
-**Contains**
-- Orders submitted by that user
-- Current order status
-
-**Rules**
-- Engine must not modify directly
+**Must NOT**
+- Match orders
+- Block engine execution
 
 ---
 
 ### `storage/trades/trades.json`
 
 **Purpose**
-- Global immutable trade ledger.
-
-**Written by**
-- Engine (via helpers)
+- Global immutable trade ledger
 
 **Rules**
 - Append-only
@@ -313,27 +313,35 @@ The goal is that **any developer can open a file and immediately know what to bu
 
 ---
 
+### `storage/session_orders/orders_userX.json`
+
+**Purpose**
+- Per-user session order history
+
+**Written by**
+- `session_manager.py`
+
+**Rules**
+- Engine must not modify directly
+
+---
+
 ### `storage/logs/logs_userX.txt`
 
 **Purpose**
-- Human-readable audit log.
+- Human-readable audit logs
 
 **Written by**
 - Logger utility
 
-**Contains**
-- Order placements
-- Trade executions
-- Timestamps
-
 ---
 
-## 7. Utilities (`utils/`)
+## 6. Utilities (`utils/`)
 
 ### `utils/helpers.py`
 
 **Purpose**
-- Shared utility functions.
+- Shared utility functions
 
 **Responsibilities**
 - Safe JSON read/write
@@ -350,17 +358,31 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `utils/logger.py`
 
 **Purpose**
-- Centralized logging.
+- Centralized logging
 
 **Responsibilities**
-- Write formatted log messages
-- Timestamped entries
+- Write timestamped log messages
 - User-specific logs
+- Record order placement and trade execution events
 
-**Used by**
-- Engine
-- Client
-- Session manager
+---
+
+## 7. Simulation (`simulation/`)
+
+### `simulation/simulator.py`
+
+**Purpose**
+- Automated order generation
+
+**Responsibilities**
+- Generate random BUY/SELL orders
+- Randomize price and quantity
+- Send orders via TCP client
+- Simulate real users
+
+**Must NOT**
+- Modify engine internals
+- Match orders
 
 ---
 
@@ -369,7 +391,7 @@ The goal is that **any developer can open a file and immediately know what to bu
 ### `test_engine.py`
 - Matching correctness
 - Partial fills
-- Multiple matches
+- Multi-order matching
 
 ### `test_orderbook.py`
 - Heap behavior
@@ -386,13 +408,34 @@ The goal is that **any developer can open a file and immediately know what to bu
 
 ### `start_engine.py`
 - Initialize engine
+- Restore order book from disk
 - Start TCP server
-- Keep process alive
 
 ### `start_client.py`
-- Launch client with arguments
+- Launch client with CLI args
 
 ### `start_simulation.py`
 - Run simulator mode
 
 ---
+
+## Shutdown & Recovery Behavior
+
+- On graceful shutdown:
+  - Active orders are saved to disk
+  - Trades are flushed
+- On startup:
+  - Orders are restored
+  - Order book is rebuilt
+  - Matching resumes seamlessly
+
+---
+
+## Design Philosophy
+
+- Clear separation of concerns
+- Deterministic matching
+- Crash-safe persistence
+- No hidden side effects
+
+This project favors **clarity over cleverness**.
