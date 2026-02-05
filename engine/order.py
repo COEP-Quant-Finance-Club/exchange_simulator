@@ -53,20 +53,14 @@ class Order:
         Parameters:
             filled_quantity (int): Quantity filled in a trade
         """
-    
-    
-        self.remaining_quantity -= filled_quantity
-
-        # status update
-        if self.remaining_quantity == 0:
-            self.status = "FILLED"
-        else:
-            self.status = "PARTIALLY_FILLED"
-
-
-        return self.status
-
+            self.remaining_quantity -= filled_quantity
         
+            # status update
+            if  self.remaining_quantity == 0:
+                self.status = "FILLED"
+            else: 
+                self.status = "PARTIALLY_FILLED"
+
 
     def is_filled(self) -> bool:
         """
