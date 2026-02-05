@@ -53,13 +53,13 @@ class Order:
         Parameters:
             filled_quantity (int): Quantity filled in a trade
         """
-            self.remaining_quantity -= filled_quantity
-        
-            # status update
-            if  self.remaining_quantity == 0:
-                self.status = "FILLED"
-            else: 
-                self.status = "PARTIALLY_FILLED"
+        self.remaining_quantity -= filled_quantity
+    
+        # status update
+        if  self.remaining_quantity == 0:
+            self.status = "FILLED"
+        else: 
+            self.status = "PARTIALLY_FILLED"
 
 
     def is_filled(self) -> bool:
@@ -88,6 +88,35 @@ class Order:
         else: 
             return False
         
+    @staticmethod
+    def to_dict(self) -> dict:
+        """
+        Convert this Order into a plain Python dictionary.
+
+        Purpose:
+        --------
+        - Persistence
+        - Network responses
+        - Logging
+
+        This method exposes internal state
+        without leaking behavior.
+        """
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        """
+        Reconstruct an Order from plain Python data.
+
+        Used during:
+        -------------
+        - Engine restart
+        - Order book recovery
+
+        Assumes data has already been validated.
+        """
+        pass
 
     def __repr__(self) -> str:
         """

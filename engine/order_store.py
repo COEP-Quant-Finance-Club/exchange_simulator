@@ -1,3 +1,11 @@
+import os
+from typing import List
+
+from utils.file_io import FileIO
+from utils.serialization import SerializationUtils
+from engine.order import Order
+
+
 class OrderStore:
     """
     Handles persistence of active orders to disk and recovery on engine startup.
@@ -13,7 +21,7 @@ class OrderStore:
     - Interact with sockets or clients
     """
 
-    def __init__(self, filepath: str = "orders.json"):
+    def __init__(self, filepath: str = "storage/orders_snapshot.json"):
         """
         Initialize the OrderStore.
 
@@ -21,27 +29,23 @@ class OrderStore:
             filepath (str): Path to the JSON file used for
                             persisting active orders.
         """
-        pass
+        self.filepath = filepath
 
-    def save(self, orders: list):
+    def save(self, orders: List[Order]):
         """
         Persist active orders to disk.
 
         This method is expected to be called during:
         - Graceful engine shutdown
-        - Optional periodic snapshots (if implemented later)
 
         Behavior:
         - Serialize only active orders (NEW or PARTIALLY_FILLED)
-        - Write them as a snapshot to orders.json
-        - Overwrite existing file content safely
-
-        Parameters:
-            orders (list): List of Order objects that are still active
+        - Write them as a snapshot to disk
+        - Overwrite existing snapshot atomically
         """
-        pass
+        
 
-    def load(self) -> list:
+    def load(self) -> List[Order]:
         """
         Load persisted orders from disk.
 
@@ -49,59 +53,35 @@ class OrderStore:
         - Engine startup before accepting new orders
 
         Behavior:
-        - Read orders.json if it exists
+        - Read snapshot file if it exists
         - Deserialize stored data
-        - Reconstruct Order objects with correct remaining quantities
-        - Return an empty list if no persisted orders exist
-
-        Returns:
-            list: List of reconstructed Order objects
+        - Reconstruct Order objects
+        - Return empty list if no snapshot exists
         """
         pass
 
-    def serialize_order(self, order):
+    def serialize_order(self, order: Order) -> dict:
         """
         Convert an Order object into a JSON-serializable dictionary.
 
-        This method exists to:
-        - Isolate serialization logic
-        - Ensure consistency of stored fields
-        - Allow easy schema changes in the future
-
-        Parameters:
-            order (Order): Order instance to serialize
-
-        Returns:
-            dict: JSON-serializable representation of the order
+        This isolates persistence schema from domain logic.
         """
         pass
 
-    def deserialize_order(self, data: dict):
+    def deserialize_order(self, data: dict) -> Order:
         """
         Convert stored order data back into an Order object.
 
-        This method exists to:
-        - Centralize reconstruction logic
-        - Guarantee correct restoration of order state
-        - Avoid duplicating object creation logic elsewhere
-
-        Parameters:
-            data (dict): Dictionary loaded from orders.json
-
-        Returns:
-            Order: Reconstructed Order object
+        Centralizes reconstruction logic to guarantee consistency.
         """
         pass
 
     def clear(self):
         """
-        Clear persisted order data.
+        Clear persisted order snapshot.
 
         Intended usage:
-        - Testing environments
+        - Testing
         - Manual resets
-        - After successful migration to another persistence layer
-
-        This method should remove or reset the stored snapshot.
         """
-        pass
+        
