@@ -176,6 +176,7 @@ class OrderBook:
                 self.add_sell_orders(incoming_order)
         return trades
     
+    @staticmethod
     def to_dict(self) -> dict:
         """
         Convert the entire order book into a plain Python dictionary.
