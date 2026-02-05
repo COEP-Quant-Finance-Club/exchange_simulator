@@ -94,7 +94,36 @@ class Order:
         else: 
             return False
         
+    
+    def to_dict(self) -> dict:
+        """
+        Convert this Order into a plain Python dictionary.
 
+        Purpose:
+        --------
+        - Persistence
+        - Network responses
+        - Logging
+
+        This method exposes internal state
+        without leaking behavior.
+        """
+        pass
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        """
+        Reconstruct an Order from plain Python data.
+
+        Used during:
+        -------------
+        - Engine restart
+        - Order book recovery
+
+        Assumes data has already been validated.
+        """
+        pass
+    
     def __repr__(self) -> str:
         """
         Developer-friendly string representation of the order.

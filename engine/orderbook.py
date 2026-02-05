@@ -175,7 +175,26 @@ class OrderBook:
             if incoming_order.remaining_quantity > 0:
                 self.add_sell_orders(incoming_order)
         return trades
+    
+    def to_dict(self) -> dict:
+        """
+        Convert the entire order book into a plain Python dictionary.
 
+        Purpose:
+        --------
+        - Snapshot persistence on shutdown
+
+        Delegates serialization of individual orders
+        to Order.to_dict().
+        """
+
+    @classmethod
+    def from_dict(cls, data: dict):
+        """
+        Restore an OrderBook from persisted snapshot data.
+
+        Used only during engine startup.
+        """
 
     def _match_market_buy(self, incoming_order):
         """
@@ -289,3 +308,5 @@ class OrderBook:
                 self.add_sell_orders(incoming_order)
         
         return trades
+    
+    

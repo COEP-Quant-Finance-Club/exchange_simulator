@@ -73,14 +73,14 @@ Tasks are grouped by subsystem to make ownership and priorities clear.
 
 ## Networking Layer
 
-- [ ] Implement `tcp_server.py`
-- [ ] Handle multiple client connections
-- [ ] Validate incoming JSON payloads
-- [ ] Forward orders to engine safely
-- [ ] Return engine responses to correct client
-- [ ] Handle client disconnects gracefully
+- [x] Implement `tcp_server.py`
+- [x] Handle multiple client connections
+- [x] Validate incoming JSON payloads
+- [x] Forward orders to engine safely
+- [x] Return engine responses to correct client
+- [x] Handle client disconnects gracefully
 
-- [ ] Implement `tcp_client.py`
+- [x] Implement `tcp_client.py`
 - [ ] Serialize order requests
 - [ ] Deserialize engine responses
 - [ ] Support listening for async updates
