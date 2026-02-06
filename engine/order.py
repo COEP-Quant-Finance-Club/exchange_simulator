@@ -9,6 +9,7 @@ class Order:
     def __init__(
         self,
         order_id: int,
+        client_id: str,
         user: str,
         side: str,
         quantity: int,
@@ -29,6 +30,7 @@ class Order:
             order_type (str): "LIMIT" or "MARKET"
         """
         self.order_id = order_id
+        self.client_id = client_id
         self.user = user
         self.side = side
         self.price = price
@@ -118,19 +120,19 @@ class Order:
         Assumes data has already been validated.
         """
 
-        order = cls(
-        order_id=data["order_id"],
-        user=data["user"],
-        side=data["side"],
-        quantity=data["quantity"],
-        price=data["price"],
-        timestamp=data["timestamp"],
-        order_type=data["order_type"]
+        order = cls (
+            order_id=data["order_id"],
+            client_id=data["client_id"],
+            user=data["user"],
+            side=data["side"],
+            quantity=data["quantity"],
+            price=data["price"],
+            timestamp=data["timestamp"],
+            order_type=data["order_type"]
         )
 
         order.remaining_quantity = data["remaining_quantity"]
         order.status = data["status"]
-
         return order
 
     def __repr__(self) -> str:

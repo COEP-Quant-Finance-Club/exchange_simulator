@@ -1,6 +1,7 @@
 import time
 from typing import Dict, List, Optional, Tuple
 import uuid
+from engine.order import Order
 
 class ExchangeEngine:
     """
@@ -58,7 +59,7 @@ class ExchangeEngine:
         self._running = False
         
 
-    def place_order(self, order: Dict) -> Dict:
+    def place_order(self, incoming_order: Dict) -> Dict:
         """
         Main entry point for all incoming client orders.
 
@@ -85,9 +86,44 @@ class ExchangeEngine:
                     "message": str
                 }
         """
+        # validate the order
+        try:
+            # 0. Engine must be running
+            self._assert_engine_running()
+
+            # 1. Validate incoming order
+            self._validate_order(incoming_order)
+
+            # 2. Assign order ID and timestamp
+            order_id = self._generate_order_id()
+            timestamp = time.time()
+
+            # Copy order to avoid mutating client input
+            order = dict(incoming_order)
+            order["order_id"] = order_id
+            order["timestamp"] = timestamp
+
+            # 3. Process order via order book
+            trades, remaining_quantity = self._process_order(order)
+
+            # 4. Emit execution / audit event
+            self._emit_order_event(order, trades, remaining_quantity)
+
+            # 5. Build success response
+            return self._build_success_response(
+                order_id=order_id,
+                trades=trades,
+                remaining_quantity=remaining_quantity
+            )
+        except Exception as e:
+            # 6. Build standardized error response
+                return self._build_error_response(
+            incoming_order=incoming_order,
+                error=str(e)
+            )
         
         
-    def _process_order(self, order: Dict) -> Tuple[List[Dict], int]:
+    def _process_order(self, incoming_order: Dict) -> Tuple[List[Dict], int]:
         """
         Core order processing logic.
 
@@ -101,7 +137,13 @@ class ExchangeEngine:
                     remaining_quantity: int
                 )
         """
-        pass
+        trades = []
+        if incoming_order["order_type"] == "LIMIT":
+            trades = self.order_book.process_limit_orders(Order.from_dict(incoming_order))
+        else:
+            trades = self.order_book.process_market_orders(Order.from_dict(incoming_order))
+        remaining_quantity = incoming_order["quantity"]
+        return (trades, remaining_quantity)
 
     def _validate_order(self, order: Dict) -> None:
         """
@@ -110,13 +152,29 @@ class ExchangeEngine:
         Raises:
             ValueError: if order is invalid
         """
-        pass
+        
+        required = {"user", "side", "quantity", "client_id", "order_type"}
+
+        missing = required - order.keys()
+        if missing:
+            raise ValueError(f"Missing fields: {missing}")
+
+        if order["side"] not in ("BUY", "SELL"):
+            raise ValueError("Invalid side")
+
+        if order["quantity"] <= 0:
+            raise ValueError("Quantity must be positive")
+
+        if order["order_type"] == "LIMIT" and "price" not in order:
+            raise ValueError("LIMIT order requires price")
+
 
     def _assert_engine_running(self) -> None:
         """
         Ensure engine is in running state.
         """
-        pass
+        if not self._running:
+            raise RuntimeError("Exchange engine is not running")
 
     def _generate_order_id(self) -> int:
         """
@@ -139,7 +197,7 @@ class ExchangeEngine:
         """
         pass
 
-    def _build_error_response(self, order: Dict, error: str) -> Dict:
+    def _build_error_response(self, incoming_order: Dict, error: str) -> Dict:
         """
         Build standardized error response.
         """
@@ -157,7 +215,7 @@ class ExchangeEngine:
 
     def _emit_order_event(
         self,
-        order: Dict,
+        incoming_order: Dict,
         trades: List[Dict],
         remaining_quantity: int
     ) -> None:
