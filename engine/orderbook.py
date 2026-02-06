@@ -1,5 +1,6 @@
 import heapq
 from engine.trade import Trade
+from engine.order import Order
 import time
 class OrderBook:
     def __init__(self):
@@ -188,6 +189,14 @@ class OrderBook:
         Delegates serialization of individual orders
         to Order.to_dict().
         """
+        return {
+            "buy_orders": [
+                order.to_dict() for (_, _, order) in self.buy_orders
+            ],
+            "sell_orders": [
+                order.to_dict() for (_, _, order) in self.sell_orders
+            ]
+        }
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -196,6 +205,17 @@ class OrderBook:
 
         Used only during engine startup.
         """
+        order_book = cls()
+
+        for order_data in data.get("buy_orders", []):
+            order = Order.from_dict(order_data)
+            order_book.add_buy_orders(order)
+
+        for order_data in data.get("sell_orders", []):
+            order = Order.from_dict(order_data)
+            order_book.add_sell_orders(order)
+
+        return order_book
 
     def _match_market_buy(self, incoming_order):
         """

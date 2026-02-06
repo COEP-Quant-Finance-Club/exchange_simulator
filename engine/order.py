@@ -88,7 +88,7 @@ class Order:
         else: 
             return False
         
-    @staticmethod
+
     def to_dict(self) -> dict:
         """
         Convert this Order into a plain Python dictionary.
@@ -102,7 +102,8 @@ class Order:
         This method exposes internal state
         without leaking behavior.
         """
-        pass
+        return self.__dict__
+        
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -116,7 +117,21 @@ class Order:
 
         Assumes data has already been validated.
         """
-        pass
+
+        order = cls(
+        order_id=data["order_id"],
+        user=data["user"],
+        side=data["side"],
+        quantity=data["quantity"],
+        price=data["price"],
+        timestamp=data["timestamp"],
+        order_type=data["order_type"]
+        )
+
+        order.remaining_quantity = data["remaining_quantity"]
+        order.status = data["status"]
+
+        return order
 
     def __repr__(self) -> str:
         """
@@ -133,3 +148,15 @@ class Order:
         f"order_type={self.order_type!r})"
         )
 
+import time
+# testing 
+if __name__ == "__main__":
+    od = Order(order_id=12, user="Bhavesh", side="BUY", quantity=10, price=98.4, timestamp=time.time(), order_type="LIMIT")
+    od.apply_fill(1)
+
+    print(od.is_active())
+    print(od.is_filled())
+    odDict = od.to_dict()
+    print(odDict)
+    print()
+    print(Order.from_dict(odDict))

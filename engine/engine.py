@@ -1,6 +1,6 @@
 import time
 from typing import Dict, List, Optional, Tuple
-
+import uuid
 
 class ExchangeEngine:
     """
@@ -17,7 +17,6 @@ class ExchangeEngine:
     This class contains *business logic only*.
     No networking, no threading, no printing.
     """
-    
 
     def __init__(self, order_book=None, logger=None):
         """
@@ -86,8 +85,8 @@ class ExchangeEngine:
                     "message": str
                 }
         """
-        pass
-
+        
+        
     def _process_order(self, order: Dict) -> Tuple[List[Dict], int]:
         """
         Core order processing logic.
@@ -126,7 +125,8 @@ class ExchangeEngine:
         Returns:
             int
         """
-        pass
+        return uuid.uuid4().int
+        
 
     def _build_success_response(
         self,
