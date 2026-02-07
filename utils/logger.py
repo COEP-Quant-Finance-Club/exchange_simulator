@@ -1,31 +1,23 @@
-class Logger:
-    """
-    User-specific audit logger.
+from utils.time_utils import current_timestamp
+from utils.file_io import ensure_dir, ensure_file
 
-    Used to record:
-    - Order placement
-    - Trade execution
-    - System events
+LOG_FILE = "storage/logs/system.log"
 
-    Logs are human-readable and append-only.
-    """
+def _prepare_log_file():
+    ensure_dir("storage/logs")
+    ensure_file(LOG_FILE)
 
-    def __init__(self, user: str):
-        """
-        Initialize logger for a specific user.
-        """
+def log_info(message):
+    _prepare_log_file()
+    with open(LOG_FILE, "a") as f:
+        f.write(f"[INFO] {current_timestamp()} - {message}\n")
 
-    def log_order_placed(self, message: str):
-        """
-        Log order placement event.
-        """
+def log_trade(trade):
+    _prepare_log_file()
+    with open(LOG_FILE, "a") as f:
+        f.write(f"[TRADE] {current_timestamp()} - {trade}\n")
 
-    def log_trade_executed(self, message: str):
-        """
-        Log trade execution event.
-        """
-
-    def log_system(self, message: str):
-        """
-        Log generic system messages.
-        """
+def log_error(message):
+    _prepare_log_file()
+    with open(LOG_FILE, "a") as f:
+        f.write(f"[ERROR] {current_timestamp()} - {message}\n")

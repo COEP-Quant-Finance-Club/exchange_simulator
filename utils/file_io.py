@@ -1,34 +1,19 @@
-class FileIO:
+import os
+
+def ensure_dir(path):
     """
-    Low-level file operations.
-
-    Responsible only for:
-    - Reading files
-    - Writing files
-    - Creating directories if missing
+    Create directory if it does not exist.
     """
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-    @staticmethod
-    def read_text(path: str) -> str:
-        """
-        Read entire file content as string.
-        """
+def ensure_file(path):
+    """
+    Create empty file if it does not exist.
+    """
+    directory = os.path.dirname(path)
+    if directory:
+        ensure_dir(directory)
 
-    @staticmethod
-    def write_text(path: str, content: str):
-        """
-        Write string content to file.
-        Overwrites existing content.
-        """
-
-    @staticmethod
-    def append_text(path: str, content: str):
-        """
-        Append string content to file.
-        """
-
-    @staticmethod
-    def ensure_dir(path: str):
-        """
-        Create directory if it does not exist.
-        """
+    if not os.path.exists(path):
+        open(path, "w").close()

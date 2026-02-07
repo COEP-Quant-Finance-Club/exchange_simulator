@@ -1,18 +1,7 @@
-class TimeUtils:
+from datetime import datetime
+
+def current_timestamp():
     """
-    Central timestamp provider.
-
-    Ensures consistent formatting across the system.
+    Returns current time as string in YYYY-MM-DD HH:MM:SS format
     """
-
-    @staticmethod
-    def now_iso() -> str:
-        """
-        Return current timestamp in ISO-8601 format.
-        """
-
-    @staticmethod
-    def now_readable() -> str:
-        """
-        Return human-readable timestamp for logs.
-        """
+    return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
