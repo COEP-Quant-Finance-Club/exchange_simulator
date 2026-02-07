@@ -1,6 +1,11 @@
 import json
 import os
 
+def log_info(message):
+    """
+    Logs informational message to system log file
+    """
+
 def load_json(path):
     """
     Loads JSON file and returns list.
