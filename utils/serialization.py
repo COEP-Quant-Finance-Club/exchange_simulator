@@ -26,3 +26,10 @@ def append_json(path, record):
     data.append(record)
     save_json(path, data)
 
+def append_trade(trade):
+    """
+    Append a trade record to storage/trades/trades.json
+    """
+    from utils.file_io import ensure_dir
+    ensure_dir("storage/trades")
+    append_json("storage/trades/trades.json", trade)
