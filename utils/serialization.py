@@ -1,23 +1,28 @@
-class SerializationUtils:
+import json
+import os
+
+def load_json(path):
     """
-    Handles conversion between:
-    - Plain Python data (dict, list, int, str)
-    - JSON strings
-
-    This is a boundary utility.
-    It must NEVER contain domain logic.
+    Loads JSON file and returns list.
+    Returns empty list if file does not exist.
     """
+    if not os.path.exists(path):
+        return []
+    with open(path, "r") as f:
+        return json.load(f)
 
-    @staticmethod
-    def to_json(data: dict) -> str:
-        """
-        Convert plain Python data into JSON string.
+def save_json(path, data):
+    """
+    Saves data to JSON file.
+    """
+    with open(path, "w") as f:
+        json.dump(data, f, indent=4)
 
-        Assumes data is already JSON-serializable.
-        """
+def append_json(path, record):
+    """
+    Appends a record to JSON list file.
+    """
+    data = load_json(path)
+    data.append(record)
+    save_json(path, data)
 
-    @staticmethod
-    def from_json(json_str: str) -> dict:
-        """
-        Convert JSON string into plain Python data.
-        """
