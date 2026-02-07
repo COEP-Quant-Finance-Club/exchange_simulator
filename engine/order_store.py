@@ -1,8 +1,7 @@
-import os
 from typing import List
 
-from utils.file_io import FileIO
-from utils.serialization import SerializationUtils
+from utils.file_io import *
+from utils.serialization import *
 from engine.order import Order
 
 
@@ -43,7 +42,27 @@ class OrderStore:
         - Write them as a snapshot to disk
         - Overwrite existing snapshot atomically
         """
+        if not orders:
+            return
         
+        active_orders = [
+            self.serialize_order(order)
+            for order in orders
+            if order.status in ("NEW", "PARTIALLY_FILLED")
+        ]
+    
+        # ensure the directory should exist.
+        directory = os.path.dirname(self.filepath)
+        if directory:
+            ensure_dir(directory)
+        
+        snapshot = {
+            "version": 1,
+            "orders": active_orders
+        }
+
+        save_json(self.filepath, snapshot)
+    
 
     def load(self) -> List[Order]:
         """
@@ -58,7 +77,19 @@ class OrderStore:
         - Reconstruct Order objects
         - Return empty list if no snapshot exists
         """
-        pass
+        
+        if not os.path.exists(self.filepath):
+            return []
+        
+        data = load_json(self.filepath)
+        order_data = data.get("orders", [])
+
+        orders : List[Order] = []
+
+        for order_dict in order_data:
+            orders.append(self.deserialize_order(order_dict))
+
+
 
     def serialize_order(self, order: Order) -> dict:
         """
@@ -66,7 +97,8 @@ class OrderStore:
 
         This isolates persistence schema from domain logic.
         """
-        pass
+        return order.to_dict()
+
 
     def deserialize_order(self, data: dict) -> Order:
         """
@@ -74,7 +106,7 @@ class OrderStore:
 
         Centralizes reconstruction logic to guarantee consistency.
         """
-        pass
+        return Order.from_dict(data=data)
 
     def clear(self):
         """
@@ -84,4 +116,5 @@ class OrderStore:
         - Testing
         - Manual resets
         """
-        
+        if os.path.exists(self.filepath):
+            os.remove(self.filepath)

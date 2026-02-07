@@ -2,8 +2,8 @@ import threading
 import queue
 import time
 
-from utils.file_io import FileIO
-from utils.serialization import SerializationUtils
+from utils.file_io import *
+from utils.serialization import *
 from engine.trade import Trade
 
 
@@ -34,7 +34,17 @@ class TradeWriter:
         """
         Start the background trade writing process.
         """
-        pass
+        #if already running the thread
+        if self._running:
+            return
+
+        self._running = True
+        self._thread = threading.Thread(
+            target=self._writer_loop,
+            name="TradeWriterThread",
+            daemon=True
+        )
+        self._thread.start()
 
     def enqueue_trade(self, trade: Trade):
         """
@@ -42,7 +52,11 @@ class TradeWriter:
 
         This method MUST be non-blocking.
         """
-        pass
+        if not self._running:
+            raise RuntimeError("TradeWriter Thread is not running")
+
+        self._queue.put(trade)
+
 
     def _writer_loop(self):
         """
@@ -50,22 +64,54 @@ class TradeWriter:
 
         Consumes trades in FIFO order and appends them to the ledger.
         """
-        pass
+        while self._running or not self._queue.empty(): 
+
+            try: 
+                trade = self._queue.get(timeout=0.5)
+            except queue.Empty:
+                continue
+
+            try: 
+                # serialize the data 
+                record = trade.to_dict()
+                #append this to the trade.json
+                self.append_trade(record)
+            finally:
+                self._queue.task_done()
+
+                
+                
 
     def flush(self):
         """
         Flush all pending trades to disk.
         """
-        pass
+        self._queue.join()
 
     def stop(self):
         """
         Stop the background writer gracefully.
         """
-        pass
+        if not self._running:
+            return
+        
+        self._running = False
+        self.flush()
+
+        if self._thread:
+            self._thread.join()
+            self._thread = None
 
     def is_running(self) -> bool:
         """
         Check whether the trade writer is currently active.
         """
-        pass
+        return self._running
+
+    def append_trade(self, trade: dict):
+        """
+        Append a trade record to storage/trades/trades.json
+        """
+        from utils.file_io import ensure_dir
+        ensure_dir("storage/trades")
+        append_json(self.ledger_path, trade)

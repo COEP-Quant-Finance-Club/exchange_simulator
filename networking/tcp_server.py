@@ -49,11 +49,8 @@ class TCPServer:
             
             # Accept clients in a loop
             while self.running:
-                try:
-                    self.accept_client()
-                except Exception as e:
-                    if self.running:
-                        print(f"Error accepting client: {e}")
+                self.accept_client()
+
                     
         except Exception as e:
             print(f"Error starting server: {e}")
@@ -165,8 +162,7 @@ class TCPServer:
 
         try:
             with self.lock:
-                order = order.from_dict(order)
-                response = self.engine.submit_order(order)
+                response = self.engine.place_order(order)
                 return response
 
         except Exception as e:
