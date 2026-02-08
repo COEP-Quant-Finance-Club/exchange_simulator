@@ -15,6 +15,12 @@ It must NOT contain:
 - Order book manipulation
 - Persistence logic
 """
+import argparse
+import questionary
+
+from exchange_simulator.client.session_manager import SessionManager
+from exchange_simulator.networking.tcp_client import TCPClient
+
 
 class ClientUI:
     """
@@ -50,7 +56,11 @@ class ClientUI:
         - Open sockets directly
         - Load or write files
         """
-        pass
+
+        self.user = user
+        self.session = SessionManager(self.user)
+        self.tcp_client = TCPClient(host, port)
+
 
     def start(self):
         """
@@ -64,7 +74,29 @@ class ClientUI:
 
         This method controls the lifecycle of the session.
         """
-        pass
+
+        print(f"Welcome to the Exchange Simulator ,{self.user}")
+
+        if not self.tcp_client.connect():
+            print("Connection failed")
+            return
+
+        try:
+            while True:
+                order = self._prompt_order()
+                if order is None:
+                    break
+
+                self.session.add_order(order)
+                response = self.tcp_client.submit_order(order)
+                self._handle_response(response)
+
+        except KeyboardInterrupt:
+            print("User interrupted")
+
+        finally:
+            self.shutdown()
+
 
     def _prompt_order(self):
         """
@@ -91,7 +123,52 @@ class ClientUI:
         - A validated order dictionary
         - OR None if the user chooses to exit
         """
-        pass
+
+        proceed = questionary.select(
+            "Would you like to proceed?",
+            choices = ["Yes", "No"],
+        ).ask()
+
+        if proceed != "Yes":
+            return None
+
+        side = questionary.select(
+            "Order side:",
+            choices=["BUY", "SELL"]
+        ).ask()
+
+        otype = questionary.select(
+            "Order type:",
+            choices=["LIMIT", "MARKET"]
+        ).ask()
+
+        qty_str = questionary.text(
+            "Quantity:",
+            validate=lambda x: x.isdigit() and int(x) > 0
+        ).ask()
+
+        quantity = int(qty_str)
+
+        price = None
+
+        if otype == "LIMIT":
+            price_str = questionary.text(
+                "Price:",
+                validate=lambda x: x.isdigit() and int(x) > 0
+            ).ask()
+            price = int(price_str)
+
+        order = {
+            "user": self.user,
+            "side": side,
+            "type": otype,
+            "quantity": quantity
+        }
+
+        if price is not None:
+            order["price"] = price
+
+        return order
 
     def _submit_order(self, order: dict):
         """
@@ -105,7 +182,9 @@ class ClientUI:
         - Modify order contents
         - Generate IDs or timestamps
         """
-        pass
+        return self.tcp_client.submit_order(order)
+
+
 
     def _handle_response(self, response: dict):
         """
@@ -122,7 +201,29 @@ class ClientUI:
         This method is the ONLY place where trade execution
         messages are printed to the terminal.
         """
-        pass
+
+
+        print("\n--- Engine Response ---")
+
+        if not response.get("accepted", True):
+            print("Order rejected")
+            if "error" in response:
+                print("Reason:", response["error"])
+            return
+
+        self.session.update_order(response)
+
+        print("Order accepted")
+        print("Order ID:", response.get("order_id"))
+
+        trades = response.get("trades") or []
+        if trades:
+            print("\nTrades executed:")
+            for t in trades:
+                print(t)
+
+        print("Remaining quantity:",
+              response.get("remaining_quantity"))
 
     def shutdown(self):
         """
@@ -133,4 +234,18 @@ class ClientUI:
         - Flush or finalize session state if required
         - Print session termination message
         """
-        pass
+        self.tcp_client.close_connection()
+        self.session.release_lock()
+        print("\nSession closed.")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--user", required=True)
+    parser.add_argument("--host", default="localhost")
+    parser.add_argument("--port", type=int, default=9000)
+
+    args = parser.parse_args()
+
+    ClientUI(args.user, args.host, args.port).start()
+
