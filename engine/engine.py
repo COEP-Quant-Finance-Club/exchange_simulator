@@ -1,6 +1,8 @@
 import time
 from typing import Dict, List, Optional, Tuple
 import uuid
+import traceback
+
 from engine.trade import Trade
 from engine.order import Order
 
@@ -117,11 +119,9 @@ class ExchangeEngine:
                 remaining_quantity=remaining_quantity
             )
         except Exception as e:
-            # 6. Build standardized error response
-                return self._build_error_response(
-            incoming_order=incoming_order,
-                error=str(e)
-            )
+            traceback.print_exc()
+            raise
+
         
         
     def _process_order(self, incoming_order: Dict) -> Tuple[List[Dict], int]:
@@ -138,13 +138,20 @@ class ExchangeEngine:
                     remaining_quantity: int
                 )
         """
-        trades = []
+      
+        # Create Order ONCE
+        order = Order.from_dict(incoming_order)
+
         if incoming_order["order_type"] == "LIMIT":
-            trades = self.order_book.process_limit_orders(Order.from_dict(incoming_order))
+            trades = self.order_book.process_limit_orders(order)
         else:
-            trades = self.order_book.process_market_orders(Order.from_dict(incoming_order))
-        remaining_quantity = incoming_order["quantity"]
-        return (trades, remaining_quantity)
+            trades = self.order_book.process_market_orders(order)
+
+        # IMPORTANT: read from Order object
+        remaining_quantity = order.quantity
+
+        return trades, remaining_quantity
+
 
     def _validate_order(self, order: Dict) -> None:
         """

@@ -156,7 +156,7 @@ class OrderBook:
                 break
         return trades
     
-    def process_limit_order(self, incoming_order):
+    def process_limit_orders(self, incoming_order):
         """
         Process an incoming limit order:
         - Attempt to match it against the opposite order book

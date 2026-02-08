@@ -18,8 +18,8 @@ It must NOT contain:
 import argparse
 import questionary
 
-from exchange_simulator.client.session_manager import SessionManager
-from exchange_simulator.networking.tcp_client import TCPClient
+from client.session_manager import SessionManager
+from networking.tcp_client import TCPClient
 
 
 class ClientUI:
@@ -161,8 +161,9 @@ class ClientUI:
         order = {
             "user": self.user,
             "side": side,
-            "type": otype,
-            "quantity": quantity
+            "order_type": otype,
+            "quantity": quantity,
+            "client_id": self.user
         }
 
         if price is not None:
@@ -207,8 +208,8 @@ class ClientUI:
 
         if not response.get("accepted", True):
             print("Order rejected")
-            if "error" in response:
-                print("Reason:", response["error"])
+            print(response)
+            
             return
 
         self.session.update_order(response)

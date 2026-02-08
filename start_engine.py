@@ -1,10 +1,3 @@
-# run/start_engine.py
-
-import sys
-import os
-
-# Ensure project root is on PYTHONPATH
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 from engine.engine import ExchangeEngine
 from engine.orderbook import OrderBook
@@ -13,18 +6,27 @@ from networking.tcp_server import TCPServer
 
 
 def main():
-    print("[ENGINE] Starting exchange engine...")
+    print("[SERVER] Bootstrapping Exchange Engine...")
 
+    # core components
     order_book = OrderBook()
-    trade_writer = TradeWriter("storage/trades/trades.json")
+
+    trade_writer = TradeWriter(
+        ledger_path="storage/trades/trades.json"
+    )
+    trade_writer.start()
 
     engine = ExchangeEngine(
         order_book=order_book,
-        trade_writer=trade_writer
+        logger=None
     )
+
+    # Attach trade writer explicitly
+    engine.trade_writer = trade_writer
 
     engine.start()
 
+    #TCP Server 
     server = TCPServer(
         host="0.0.0.0",
         port=9000,
@@ -34,10 +36,13 @@ def main():
     try:
         server.start_server()
     except KeyboardInterrupt:
-        print("\n[ENGINE] Shutdown signal received")
+        print("\n[SERVER] Shutdown requested")
     finally:
-        server.stop()
+        print("[SERVER] Shutting down...")
+
+        server.stop_server()
         engine.stop()
+        trade_writer.stop()
 
 
 if __name__ == "__main__":
