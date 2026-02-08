@@ -113,8 +113,6 @@ class SessionManager:
 
         self.orders.append(record)
 
-        print(f"[Session] NEW order stored for {self.user}")
-
         self.save()
 
     def update_order(self, response: dict):
@@ -153,7 +151,6 @@ class SessionManager:
                     break
 
         if target is None:
-            print(f"[Session] Warning: order {order_id} not found")
             return
 
         if "remaining_quantity" in response:
