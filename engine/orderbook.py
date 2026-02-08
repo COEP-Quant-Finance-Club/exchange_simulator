@@ -330,4 +330,68 @@ class OrderBook:
         
         return trades
     
+    def snapshot(self) -> dict:
+        """
+        Create a serializable snapshot of the current order book state.
+
+        Includes:
+        - All active BUY orders
+        - All active SELL orders
+
+        Excludes:
+        - Filled orders
+        - Trade history
+
+        Returns:
+            dict: Snapshot suitable for JSON persistence
+        """
+        buy_orders = []
+        sell_orders = []
+
+        # BUY heap: (-price, timestamp, Order)
+        for _, _, order in self.buy_orders:
+            if order.is_active():
+                buy_orders.append(order.to_dict())
+
+        # SELL heap: (price, timestamp, Order)
+        for _, _, order in self.sell_orders:
+            if order.is_active():
+                sell_orders.append(order.to_dict())
+
+        return {
+            "buy_orders": buy_orders,
+            "sell_orders": sell_orders
+        }
     
+
+    def restore(self, snapshot: dict) -> None:
+        """
+        Restore order book state from a snapshot.
+
+        Parameters:
+            snapshot (dict): Output from snapshot()
+
+        Notes:
+        - Clears existing order book
+        - Rebuilds BUY and SELL heaps
+        - Preserves price-time priority
+        """
+        self.buy_orders.clear()
+        self.sell_orders.clear()
+
+        # Restore BUY orders
+        for order_data in snapshot.get("buy_orders", []):
+            order = Order.from_dict(order_data)
+            heapq.heappush(
+                self.buy_orders,
+                (-order.price, order.timestamp, order)
+            )
+
+        # Restore SELL orders
+        for order_data in snapshot.get("sell_orders", []):
+            order = Order.from_dict(order_data)
+            heapq.heappush(
+                self.sell_orders,
+                (order.price, order.timestamp, order)
+            )
+

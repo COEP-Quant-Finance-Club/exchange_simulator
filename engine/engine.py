@@ -1,6 +1,7 @@
 import time
 from typing import Dict, List, Optional, Tuple
 import uuid
+from engine.trade import Trade
 from engine.order import Order
 
 class ExchangeEngine:
@@ -195,13 +196,28 @@ class ExchangeEngine:
         """
         Build a success response for client.
         """
-        pass
+        return {
+            "accepted": True,
+            "order_id": order_id,
+            "trades": [t.to_dict() for t in trades],
+            "remaining_quantity": remaining_quantity,
+            "timestamp": time.time(),
+            "message": self._execution_message(trades, remaining_quantity)
+        }
 
     def _build_error_response(self, incoming_order: Dict, error: str) -> Dict:
         """
         Build standardized error response.
         """
-        pass
+        return {
+            "accepted": False,
+            "order_id": None,
+            "trades": [],
+            "remaining_quantity": incoming_order.get("quantity", 0),
+            "timestamp": time.time(),
+            "message": error
+        }
+
 
     def _execution_message(
         self,
@@ -211,7 +227,13 @@ class ExchangeEngine:
         """
         Generate execution message for client UI.
         """
-        pass
+        if not trades:
+            return "Order accepted and placed in order book"
+
+        if remaining_quantity == 0:
+            return "Order fully executed"
+
+        return "Order partially executed"
 
     def _emit_order_event(
         self,
@@ -222,16 +244,25 @@ class ExchangeEngine:
         """
         Emit order/trade events for logging and persistence.
         """
-        pass
+        if not self.trade_writer:
+            return
+
+        for trade in trades:
+            self.trade_writer.enqueue_trade(trade)
+
 
     def snapshot_state(self) -> Dict:
         """
         Return serializable snapshot of engine state.
         """
-        pass
+        return {
+            "order_book": self.order_book.snapshot()
+        }
+
+
 
     def restore_state(self, snapshot: Dict) -> None:
         """
         Restore engine state from snapshot.
         """
-        pass
+        self.order_book.restore(snapshot["order_book"])
