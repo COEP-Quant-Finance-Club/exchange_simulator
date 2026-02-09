@@ -2,7 +2,8 @@ import time
 from typing import Dict, List, Optional, Tuple
 import uuid
 import traceback
-
+from utils.id_generators import generate_order_id
+from utils.time_utils import generate_timestamp
 from engine.trade import Trade
 from engine.order import Order
 
@@ -122,7 +123,12 @@ class ExchangeEngine:
             traceback.print_exc()
             raise
 
-        
+    
+    def _pre_process_order(self, incoming_order: Dict) -> Order:
+        incoming_order["remaining_quantity"] = incoming_order["quantity"]
+        incoming_order["timestamp"] = generate_timestamp()
+        incoming_order["order_id"] = generate_order_id()
+        return Order.from_dict(incoming_order)
         
     def _process_order(self, incoming_order: Dict) -> Tuple[List[Dict], int]:
         """
@@ -138,9 +144,9 @@ class ExchangeEngine:
                     remaining_quantity: int
                 )
         """
-      
+        
         # Create Order ONCE
-        order = Order.from_dict(incoming_order)
+        order = self._pre_process_order(incoming_order)
 
         if incoming_order["order_type"] == "LIMIT":
             trades = self.order_book.process_limit_orders(order)
@@ -151,7 +157,7 @@ class ExchangeEngine:
         remaining_quantity = order.quantity
 
         return trades, remaining_quantity
-
+    
 
     def _validate_order(self, order: Dict) -> None:
         """

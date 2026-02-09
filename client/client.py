@@ -17,7 +17,7 @@ It must NOT contain:
 """
 import argparse
 import questionary
-
+from utils.id_generators import generate_client_id
 from client.session_manager import SessionManager
 from networking.tcp_client import TCPClient
 
@@ -162,8 +162,9 @@ class ClientUI:
             "user": self.user,
             "side": side,
             "order_type": otype,
+            "status": "NEW",
             "quantity": quantity,
-            "client_id": self.user
+            "client_id": generate_client_id()
         }
 
         if price is not None:
