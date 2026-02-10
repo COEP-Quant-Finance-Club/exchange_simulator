@@ -104,6 +104,7 @@ class Order:
         This method exposes internal state
         without leaking behavior.
         """
+        
         return self.__dict__
         
 
@@ -128,6 +129,7 @@ class Order:
             quantity=data["quantity"],
             price=data["price"],
             timestamp=data["timestamp"],
+            
             order_type=data["order_type"]
         )
 
@@ -141,19 +143,21 @@ class Order:
         """
        
         return (
-        f"Order(order_id={self.order_id}, "
+         f"Order(order_id={self.order_id}, "
+        f"client_id={self.client_id!r}, "
         f"user={self.user!r}, "
         f"side={self.side!r}, "
         f"quantity={self.quantity}, "
+        f"remaining_quantity={self.remaining_quantity}, "
         f"price={self.price}, "
+        f"status={self.status!r}, "
         f"timestamp={self.timestamp}, "
-        f"order_type={self.order_type!r})"
-        )
+        f"order_type={self.order_type!r})")
 
 import time
 # testing 
 if __name__ == "__main__":
-    od = Order(order_id=12, user="Bhavesh", side="BUY", quantity=10, price=98.4, timestamp=time.time(), order_type="LIMIT")
+    od = Order(order_id=12, user="Bhavesh", client_id="cl_1233fds", side="BUY", quantity=10, price=98.4, timestamp=time.time(), order_type="LIMIT")
     od.apply_fill(1)
 
     print(od.is_active())
@@ -162,3 +166,7 @@ if __name__ == "__main__":
     print(odDict)
     print()
     print(Order.from_dict(odDict))
+    o = Order.from_dict(odDict)
+    print(o.remaining_quantity) 
+    print(o.status)
+    print(o.client_id)

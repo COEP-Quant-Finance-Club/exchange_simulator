@@ -80,7 +80,7 @@ class TCPServer:
                 
         except OSError:
             # Socket was closed, stop accepting
-            pass
+            print("SOcket was closed.")
 
     def handle_client(self, client_socket, client_address):
         """

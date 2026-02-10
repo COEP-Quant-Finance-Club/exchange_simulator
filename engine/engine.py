@@ -6,6 +6,7 @@ from utils.id_generators import generate_order_id
 from utils.time_utils import generate_timestamp
 from engine.trade import Trade
 from engine.order import Order
+from engine.order_store import OrderStore
 
 class ExchangeEngine:
     """
@@ -23,7 +24,7 @@ class ExchangeEngine:
     No networking, no threading, no printing.
     """
 
-    def __init__(self, order_book=None, logger=None):
+    def __init__(self, order_book=None, logger=None, trade_writer=None):
         """
         Initialize the exchange engine.
 
@@ -37,7 +38,7 @@ class ExchangeEngine:
         """
         self.order_book = order_book
         self.logger = logger
-
+        self.trade_writer = trade_writer
         self._order_id_counter = 0
         self._running = False
 
@@ -50,6 +51,7 @@ class ExchangeEngine:
         - Loading persisted state
         - Initializing metrics
         """
+        self.order_book.restore()
         self._running = True
 
     def stop(self) -> None:
@@ -60,6 +62,7 @@ class ExchangeEngine:
         - Persisting order book state
         - Flushing logs
         """
+        self.order_book.save()
         self._running = False
         
 

@@ -1,6 +1,7 @@
 
 from engine.engine import ExchangeEngine
 from engine.orderbook import OrderBook
+from engine.order_store import OrderStore
 from engine.trade_writer import TradeWriter
 from networking.tcp_server import TCPServer
 
@@ -9,8 +10,8 @@ def main():
     print("[SERVER] Bootstrapping Exchange Engine...")
 
     # core components
-    order_book = OrderBook()
-
+    order_store = OrderStore()
+    order_book = OrderBook(order_store=order_store)
     trade_writer = TradeWriter(
         ledger_path="storage/trades/trades.json"
     )
@@ -18,11 +19,10 @@ def main():
 
     engine = ExchangeEngine(
         order_book=order_book,
+        trade_writer=trade_writer,
         logger=None
     )
 
-    # Attach trade writer explicitly
-    engine.trade_writer = trade_writer
 
     engine.start()
 

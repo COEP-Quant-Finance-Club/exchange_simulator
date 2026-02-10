@@ -88,7 +88,7 @@ class OrderStore:
 
         for order_dict in order_data:
             orders.append(self.deserialize_order(order_dict))
-
+        return orders
 
 
     def serialize_order(self, order: Order) -> dict:
