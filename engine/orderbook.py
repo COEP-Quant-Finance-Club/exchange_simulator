@@ -68,10 +68,7 @@ class OrderBook:
                 
                 #get the trade quantity
                 trade_quantity = min(best_sell_order.remaining_quantity, incoming_order.remaining_quantity)
-                # this statements will be replaced with the methods(function) calls in the order.py class
-                # incoming_order.remaining_quantity -= trade_quantity
-                # best_sell_order.remaining_quantity -= trade_quantity
-               
+                # apply fill to update the remaining_quantity.
                 incoming_order.apply_fill(trade_quantity)
                 best_sell_order.apply_fill(trade_quantity)
                 
@@ -79,7 +76,7 @@ class OrderBook:
                 curr_timestamp = time.time()
                 
                 #creation of Trade of object
-                ttrade = Trade(
+                trade = Trade(
                               trade_id=generate_trade_id(),
                             buy_order_id=best_sell_order.order_id,
                               sell_order_id=best_sell_order.order_id,
@@ -175,7 +172,7 @@ class OrderBook:
         Returns:
             list[Trade]: Trades generated during matching
         """
-        print("the call is gone to the process limit orders.")
+        # print("the call is gone to the process limit orders.")
         if incoming_order.side == "BUY":
             trades = self._match_limit_sell(incoming_order)
             if incoming_order.remaining_quantity > 0:

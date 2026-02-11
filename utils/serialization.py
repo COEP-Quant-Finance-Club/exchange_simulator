@@ -5,20 +5,23 @@ def log_info(message):
     """
     Logs informational message to system log file
     """
+    print(message)
+    
 
 def load_json(path):
     """
-    Loads JSON file and returns list.
-    Returns empty list if file does not exist.
+    Loads JSON file and returns parsed object.
+    Returns empty dict if file does not exist.
     """
     if not os.path.exists(path):
-        return []
+        return {}
+
     try:
         with open(path, "r") as f:
-            data = json.load(f)
-            return data if isinstance(data, list) else []
+            return json.load(f)
     except json.JSONDecodeError:
-        return []
+        return {}
+
 
 def save_json(path, data):
     """

@@ -2,7 +2,6 @@ import time
 from typing import Dict, List, Optional, Tuple
 import uuid
 import traceback
-from utils.id_generators import generate_order_id
 from utils.time_utils import generate_timestamp
 from engine.trade import Trade
 from engine.order import Order
@@ -103,12 +102,14 @@ class ExchangeEngine:
 
             # 2. Assign order ID and timestamp
             order_id = self._generate_order_id()
+            print(f"this is the actual assigned: {order_id}")
             timestamp = time.time()
 
             # Copy order to avoid mutating client input
             order = dict(incoming_order)
             order["order_id"] = order_id
             order["timestamp"] = timestamp
+            order["remaining_quantity"] = order["quantity"]
 
             # 3. Process order via order book
             trades, remaining_quantity = self._process_order(order)
@@ -128,9 +129,6 @@ class ExchangeEngine:
 
     
     def _pre_process_order(self, incoming_order: Dict) -> Order:
-        incoming_order["remaining_quantity"] = incoming_order["quantity"]
-        incoming_order["timestamp"] = generate_timestamp()
-        incoming_order["order_id"] = generate_order_id()
         return Order.from_dict(incoming_order)
         
     def _process_order(self, incoming_order: Dict) -> Tuple[List[Dict], int]:
@@ -157,7 +155,7 @@ class ExchangeEngine:
             trades = self.order_book.process_market_orders(order)
 
         # IMPORTANT: read from Order object
-        remaining_quantity = order.quantity
+        remaining_quantity = order.remaining_quantity
 
         return trades, remaining_quantity
     
@@ -205,7 +203,7 @@ class ExchangeEngine:
 
     def _build_success_response(
         self,
-        order_id: int,
+        order_id,
         trades: List[Dict],
         remaining_quantity: int
     ) -> Dict:

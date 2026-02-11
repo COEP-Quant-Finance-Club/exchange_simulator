@@ -212,6 +212,8 @@ class ClientUI:
             print(response)
             
             return
+        
+        print(response)
 
         self.session.update_order(response)
 
