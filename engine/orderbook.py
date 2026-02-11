@@ -1,10 +1,13 @@
 import heapq
 from engine.trade import Trade
+from engine.order import Order
+from utils.id_generators import generate_trade_id
 import time
 class OrderBook:
-    def __init__(self):
+    def __init__(self, order_store=None):
         # this will store the pending orders
         self.buy_orders = []
+        self.order_store = order_store
         self.sell_orders = []
     
     def add_buy_orders(self, order):
@@ -56,7 +59,7 @@ class OrderBook:
             process. The list may be empty if no matches occur.
         """
         trades = []
-        
+        print(self.buy_orders, self.sell_orders)
         while incoming_order.remaining_quantity > 0 and self.sell_orders: 
             # get the best sell order
             
@@ -76,11 +79,15 @@ class OrderBook:
                 curr_timestamp = time.time()
                 
                 #creation of Trade of object
-                trade = Trade(buy_order_id=incoming_order.order_id,
-                      sell_order_id=best_sell_order.order_id,
-                        price=best_sell_price,
-                        quantity=trade_quantity,
-                        timestamp=curr_timestamp)
+                ttrade = Trade(
+                              trade_id=generate_trade_id(),
+                            buy_order_id=best_sell_order.order_id,
+                              sell_order_id=best_sell_order.order_id,
+                              buy_client_id=incoming_order.client_id,
+                              sell_client_id=best_sell_order.client_id,
+                              price=best_sell_price,
+                              quantity=trade_quantity,
+                              timestamp=curr_timestamp)
                 
                 #appending that object in the trades array
                 trades.append(trade)
@@ -121,6 +128,7 @@ class OrderBook:
         """
         trades = []
         while incoming_order.remaining_quantity > 0 and self.buy_orders:
+            print("Something is happening.")
             best_buy_price, best_buy_timestamp, best_buy_order = self.buy_orders[0]
             best_buy_price = -1 * best_buy_price
             if best_buy_price >= incoming_order.price:
@@ -139,10 +147,13 @@ class OrderBook:
                 
                 #creation of Trade of object
                 trade = Trade(buy_order_id=best_buy_order.order_id,
-                      sell_order_id=incoming_order.order_id,
-                        price=best_buy_price,
-                        quantity=trade_quantity,
-                        timestamp=curr_timestamp)
+                              trade_id=generate_trade_id(),
+                              buy_client_id=best_buy_order.client_id,
+                              sell_client_id=incoming_order.client_id,
+                              sell_order_id=incoming_order.order_id,
+                              price=best_buy_price,
+                              quantity=trade_quantity,
+                              timestamp=curr_timestamp)
                 
                 #appending that object in the trades array
                 trades.append(trade)
@@ -155,7 +166,7 @@ class OrderBook:
                 break
         return trades
     
-    def process_limit_order(self, incoming_order):
+    def process_limit_orders(self, incoming_order):
         """
         Process an incoming limit order:
         - Attempt to match it against the opposite order book
@@ -164,7 +175,7 @@ class OrderBook:
         Returns:
             list[Trade]: Trades generated during matching
         """
-        
+        print("the call is gone to the process limit orders.")
         if incoming_order.side == "BUY":
             trades = self._match_limit_sell(incoming_order)
             if incoming_order.remaining_quantity > 0:
@@ -174,8 +185,11 @@ class OrderBook:
             trades = self._match_limit_buy(incoming_order)
             if incoming_order.remaining_quantity > 0:
                 self.add_sell_orders(incoming_order)
+        
+        print(trades)
         return trades
     
+    @staticmethod
     def to_dict(self) -> dict:
         """
         Convert the entire order book into a plain Python dictionary.
@@ -187,6 +201,14 @@ class OrderBook:
         Delegates serialization of individual orders
         to Order.to_dict().
         """
+        return {
+            "buy_orders": [
+                order.to_dict() for (_, _, order) in self.buy_orders
+            ],
+            "sell_orders": [
+                order.to_dict() for (_, _, order) in self.sell_orders
+            ]
+        }
 
     @classmethod
     def from_dict(cls, data: dict):
@@ -195,6 +217,17 @@ class OrderBook:
 
         Used only during engine startup.
         """
+        order_book = cls()
+
+        for order_data in data.get("buy_orders", []):
+            order = Order.from_dict(order_data)
+            order_book.add_buy_orders(order)
+
+        for order_data in data.get("sell_orders", []):
+            order = Order.from_dict(order_data)
+            order_book.add_sell_orders(order)
+
+        return order_book
 
     def _match_market_buy(self, incoming_order):
         """
@@ -226,11 +259,15 @@ class OrderBook:
             curr_timestamp = time.time()
             
             #creation of Trade of object
-            trade = Trade(buy_order_id=incoming_order.order_id,
-                  sell_order_id=best_sell_order.order_id,
-                    price=best_sell_price,
-                    quantity=trade_quantity,
-                    timestamp=curr_timestamp)
+            trade = Trade(
+                              trade_id=generate_trade_id(),
+                            buy_order_id=best_sell_order.order_id,
+                              sell_order_id=best_sell_order.order_id,
+                              buy_client_id=incoming_order.client_id,
+                              sell_client_id=best_sell_order.client_id,
+                              price=best_sell_price,
+                              quantity=trade_quantity,
+                              timestamp=curr_timestamp)
             
             #appending that object in the trades array
             trades.append(trade)
@@ -272,11 +309,15 @@ class OrderBook:
             # get the current timestamp
             curr_timestamp = time.time()
             #creation of Trade of object
-            trade = Trade(buy_order_id=best_buy_order.order_id,
-                  sell_order_id=incoming_order.order_id,
-                    price=best_buy_price,
-                    quantity=trade_quantity,
-                    timestamp=curr_timestamp)
+            trade = Trade(
+                              trade_id=generate_trade_id(),
+                            buy_order_id=best_buy_order.order_id,
+                              sell_order_id=incoming_order.order_id,
+                              buy_client_id= best_buy_order.client_id,
+                              sell_client_id=incoming_order.client_id,
+                              price=best_buy_price,
+                              quantity=trade_quantity,
+                              timestamp=curr_timestamp)
             
             #appending that object in the trades array
             trades.append(trade)
@@ -309,4 +350,38 @@ class OrderBook:
         
         return trades
     
-    
+
+    def restore(self) -> None:
+        """
+        Restore order book state from a snapshot.
+
+        Parameters:
+            snapshot (dict): Output from snapshot()
+
+        Notes:
+        - Clears existing order book
+        - Rebuilds BUY and SELL heaps
+        - Preserves price-time priority
+        """
+        self.buy_orders.clear()
+        self.sell_orders.clear()
+        orders = self.order_store.load()
+        # Restore BUY and Sell orders
+        for order in orders:
+            if order.side == "BUY":
+                self.add_buy_orders(order=order)
+            else:
+                self.add_sell_orders(order=order)
+        
+                
+
+    def save(self):
+        """
+        Store the current data in the file.
+        """
+        buy_orders_only = [order for _, _, order in self.buy_orders]
+        sell_orders_only = [order for _, _, order in self.sell_orders]
+
+        merged_orders = buy_orders_only + sell_orders_only
+        self.order_store.save(merged_orders)
+

@@ -13,8 +13,12 @@ def load_json(path):
     """
     if not os.path.exists(path):
         return []
-    with open(path, "r") as f:
-        return json.load(f)
+    try:
+        with open(path, "r") as f:
+            data = json.load(f)
+            return data if isinstance(data, list) else []
+    except json.JSONDecodeError:
+        return []
 
 def save_json(path, data):
     """
@@ -31,10 +35,3 @@ def append_json(path, record):
     data.append(record)
     save_json(path, data)
 
-def append_trade(trade):
-    """
-    Append a trade record to storage/trades/trades.json
-    """
-    from utils.file_io import ensure_dir
-    ensure_dir("storage/trades")
-    append_json("storage/trades/trades.json", trade)
