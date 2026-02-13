@@ -7,4 +7,10 @@ def current_timestamp():
     return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 def generate_timestamp():
-    return time.time()
+    return datetime.now()
+
+def get_formated_timestamp(timestamp):
+    """Returns an formated timestamp"""
+    if isinstance(timestamp, str):
+        timestamp = datetime.fromisoformat(timestamp)
+    return timestamp.strftime("%Y-%m-%d %H:%M:%S")

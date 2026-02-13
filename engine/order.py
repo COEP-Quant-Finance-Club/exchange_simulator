@@ -8,7 +8,7 @@ class Order:
 
     def __init__(
         self,
-        order_id: int,
+        order_id,
         client_id: str,
         user: str,
         side: str,
@@ -129,7 +129,6 @@ class Order:
             quantity=data["quantity"],
             price=data["price"],
             timestamp=data["timestamp"],
-            
             order_type=data["order_type"]
         )
 

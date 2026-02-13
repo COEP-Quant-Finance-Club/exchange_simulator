@@ -180,7 +180,7 @@ class TCPServer:
         """
         try:
             # Serialize to JSON and send
-            json_message = json.dumps(message)
+            json_message = json.dumps(message, default=str)
             client_socket.sendall(json_message.encode('utf-8'))
             client_socket.sendall(b'\n')  # Message delimiter
             

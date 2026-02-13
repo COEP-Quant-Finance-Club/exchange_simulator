@@ -15,6 +15,7 @@ It must NOT contain:
 - Order book manipulation
 - Persistence logic
 """
+from utils.logger import *
 import argparse
 import questionary
 from utils.id_generators import generate_client_id
@@ -210,8 +211,9 @@ class ClientUI:
         if not response.get("accepted", True):
             print("Order rejected")
             print(response)
-            
             return
+        
+        # print(response)
 
         self.session.update_order(response)
 
@@ -222,10 +224,9 @@ class ClientUI:
         if trades:
             print("\nTrades executed:")
             for t in trades:
-                print(t)
+                log_trade_system(t)
+                log_trade_client(t)
 
-        print("Remaining quantity:",
-              response.get("remaining_quantity"))
 
     def shutdown(self):
         """

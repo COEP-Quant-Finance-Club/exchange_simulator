@@ -1,6 +1,7 @@
 import heapq
 from engine.trade import Trade
 from engine.order import Order
+from utils.time_utils import generate_timestamp
 from utils.id_generators import generate_trade_id
 import time
 class OrderBook:
@@ -68,18 +69,15 @@ class OrderBook:
                 
                 #get the trade quantity
                 trade_quantity = min(best_sell_order.remaining_quantity, incoming_order.remaining_quantity)
-                # this statements will be replaced with the methods(function) calls in the order.py class
-                # incoming_order.remaining_quantity -= trade_quantity
-                # best_sell_order.remaining_quantity -= trade_quantity
-               
+                # apply fill to update the remaining_quantity.
                 incoming_order.apply_fill(trade_quantity)
                 best_sell_order.apply_fill(trade_quantity)
                 
                 # get the current timestamp
-                curr_timestamp = time.time()
+                curr_timestamp = generate_timestamp()
                 
                 #creation of Trade of object
-                ttrade = Trade(
+                trade = Trade(
                               trade_id=generate_trade_id(),
                             buy_order_id=best_sell_order.order_id,
                               sell_order_id=best_sell_order.order_id,
@@ -143,7 +141,7 @@ class OrderBook:
                 best_buy_order.apply_fill(trade_quantity)
                 
                 # get the current timestamp
-                curr_timestamp = time.time()
+                curr_timestamp = generate_timestamp()
                 
                 #creation of Trade of object
                 trade = Trade(buy_order_id=best_buy_order.order_id,
@@ -175,7 +173,7 @@ class OrderBook:
         Returns:
             list[Trade]: Trades generated during matching
         """
-        print("the call is gone to the process limit orders.")
+        # print("the call is gone to the process limit orders.")
         if incoming_order.side == "BUY":
             trades = self._match_limit_sell(incoming_order)
             if incoming_order.remaining_quantity > 0:
@@ -256,7 +254,7 @@ class OrderBook:
             best_sell_order.apply_fill(trade_quantity)
             
             # get the current timestamp
-            curr_timestamp = time.time()
+            curr_timestamp = generate_timestamp()
             
             #creation of Trade of object
             trade = Trade(
@@ -307,7 +305,7 @@ class OrderBook:
             incoming_order.apply_fill(trade_quantity)
             best_buy_order.apply_fill(trade_quantity)
             # get the current timestamp
-            curr_timestamp = time.time()
+            curr_timestamp = generate_timestamp()
             #creation of Trade of object
             trade = Trade(
                               trade_id=generate_trade_id(),

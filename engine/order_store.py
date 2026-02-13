@@ -82,6 +82,7 @@ class OrderStore:
             return []
         
         data = load_json(self.filepath)
+        # print(f"this is {data}") # this is only for debugging purpose.
         order_data = data.get("orders", [])
 
         orders : List[Order] = []
