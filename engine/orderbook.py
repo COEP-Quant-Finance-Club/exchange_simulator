@@ -1,6 +1,7 @@
 import heapq
 from engine.trade import Trade
 from engine.order import Order
+from utils.time_utils import generate_timestamp
 from utils.id_generators import generate_trade_id
 import time
 class OrderBook:
@@ -73,7 +74,7 @@ class OrderBook:
                 best_sell_order.apply_fill(trade_quantity)
                 
                 # get the current timestamp
-                curr_timestamp = time.time()
+                curr_timestamp = generate_timestamp()
                 
                 #creation of Trade of object
                 trade = Trade(
@@ -140,7 +141,7 @@ class OrderBook:
                 best_buy_order.apply_fill(trade_quantity)
                 
                 # get the current timestamp
-                curr_timestamp = time.time()
+                curr_timestamp = generate_timestamp()
                 
                 #creation of Trade of object
                 trade = Trade(buy_order_id=best_buy_order.order_id,
@@ -253,7 +254,7 @@ class OrderBook:
             best_sell_order.apply_fill(trade_quantity)
             
             # get the current timestamp
-            curr_timestamp = time.time()
+            curr_timestamp = generate_timestamp()
             
             #creation of Trade of object
             trade = Trade(
@@ -304,7 +305,7 @@ class OrderBook:
             incoming_order.apply_fill(trade_quantity)
             best_buy_order.apply_fill(trade_quantity)
             # get the current timestamp
-            curr_timestamp = time.time()
+            curr_timestamp = generate_timestamp()
             #creation of Trade of object
             trade = Trade(
                               trade_id=generate_trade_id(),

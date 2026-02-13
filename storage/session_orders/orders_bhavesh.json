@@ -542,5 +542,188 @@
       }
     ],
     "order_id": 68257065637922913487835443279800617269
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 123,
+    "client_id": "cli_cc8c01e3",
+    "price": 12,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 45331619297567148,
+        "buy_order_id": 590282786805388,
+        "sell_order_id": 59475390194148713437862798807053847668,
+        "buy_client_id": "cli_5e26d807",
+        "sell_client_id": "cli_cc8c01e3",
+        "price": 567,
+        "quantity": 123,
+        "timestamp": 1770979570.0277047
+      }
+    ],
+    "order_id": 59475390194148713437862798807053847668
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 52,
+    "client_id": "cli_805705aa",
+    "price": 44,
+    "remaining_quantity": 52,
+    "trades": [],
+    "order_id": 54078519066872598831708687147728228621
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 44,
+    "client_id": "cli_57431a4e",
+    "price": 13,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 64890367797313490,
+        "buy_order_id": 54078519066872598831708687147728228621,
+        "sell_order_id": 40606275067724757370387632161900294191,
+        "buy_client_id": "cli_805705aa",
+        "sell_client_id": "cli_57431a4e",
+        "price": 44,
+        "quantity": 44,
+        "timestamp": 1770979763.5355752
+      }
+    ],
+    "order_id": 40606275067724757370387632161900294191
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "PARTIALLY_FILLED",
+    "quantity": 42,
+    "client_id": "cli_41a13938",
+    "price": 33,
+    "remaining_quantity": 8,
+    "trades": [
+      {
+        "trade_id": 60377821472136110,
+        "buy_order_id": 310772529979343185117475693538312788688,
+        "sell_order_id": 19837247153646661722138674741349698115,
+        "buy_client_id": "cli_3f2b6d21",
+        "sell_client_id": "cli_41a13938",
+        "price": 33,
+        "quantity": 34,
+        "timestamp": 1770979872.9348028
+      }
+    ],
+    "order_id": 19837247153646661722138674741349698115
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 124,
+    "client_id": "cli_a6e7fed0",
+    "price": 334,
+    "remaining_quantity": 124,
+    "trades": [],
+    "order_id": 229250264493030138832261978034965917048
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 2,
+    "client_id": "cli_99548eb2",
+    "price": 3,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 53959807862173663,
+        "buy_order_id": 229250264493030138832261978034965917048,
+        "sell_order_id": 105926678728503486957689076161224443880,
+        "buy_client_id": "cli_a6e7fed0",
+        "sell_client_id": "cli_99548eb2",
+        "price": 334,
+        "quantity": 2,
+        "timestamp": 1771005226.2725844
+      }
+    ],
+    "order_id": 105926678728503486957689076161224443880
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 13,
+    "client_id": "cli_54f6f299",
+    "price": 1,
+    "remaining_quantity": 13,
+    "trades": []
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 23,
+    "client_id": "cli_e6151dd1",
+    "price": 12,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 97040836808754278,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 10491272339619725916228339108037378766,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_e6151dd1",
+        "price": 22,
+        "quantity": 23,
+        "timestamp": "2026-02-13 23:45:33.822559"
+      }
+    ],
+    "order_id": 10491272339619725916228339108037378766
+  },
+  {
+    "user": "bhavesh",
+    "side": "SELL",
+    "order_type": "LIMIT",
+    "status": "PARTIALLY_FILLED",
+    "quantity": 1555,
+    "client_id": "cli_dad9c60e",
+    "price": 115,
+    "remaining_quantity": 1397,
+    "trades": [
+      {
+        "trade_id": 42842074795499749,
+        "buy_order_id": 329115390242959826435918018967921063011,
+        "sell_order_id": 329115390242959826435918018967921063011,
+        "buy_client_id": "cli_dad9c60e",
+        "sell_client_id": "cli_cb58a9e9",
+        "price": 13,
+        "quantity": 35,
+        "timestamp": "2026-02-13 23:45:57.768815"
+      },
+      {
+        "trade_id": 70450477557758169,
+        "buy_order_id": 345928680169363,
+        "sell_order_id": 345928680169363,
+        "buy_client_id": "cli_dad9c60e",
+        "sell_client_id": "cli_277bf4a7",
+        "price": 23,
+        "quantity": 123,
+        "timestamp": "2026-02-13 23:45:57.768925"
+      }
+    ],
+    "order_id": 170393813994113298910524991296167530704
   }
 ]

@@ -362,5 +362,297 @@
       }
     ],
     "order_id": 333025571479996110929196593843954008748
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 145,
+    "client_id": "cli_aa5c908a",
+    "price": 4,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 17799847134036332,
+        "buy_order_id": 590282786805388,
+        "sell_order_id": 309868459646820678179421877474155774508,
+        "buy_client_id": "cli_5e26d807",
+        "sell_client_id": "cli_aa5c908a",
+        "price": 567,
+        "quantity": 40,
+        "timestamp": 1770979602.604863
+      },
+      {
+        "trade_id": 36546325111970028,
+        "buy_order_id": 63848294761258,
+        "sell_order_id": 309868459646820678179421877474155774508,
+        "buy_client_id": "cli_168c937e",
+        "sell_client_id": "cli_aa5c908a",
+        "price": 23,
+        "quantity": 62,
+        "timestamp": 1770979602.6048903
+      },
+      {
+        "trade_id": 96978590925616719,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 309868459646820678179421877474155774508,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_aa5c908a",
+        "price": 22,
+        "quantity": 43,
+        "timestamp": 1770979602.6049066
+      }
+    ],
+    "order_id": 309868459646820678179421877474155774508
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "PARTIALLY_FILLED",
+    "quantity": 24,
+    "client_id": "cli_7f39c6a0",
+    "price": 23,
+    "remaining_quantity": 16,
+    "trades": [
+      {
+        "trade_id": 16155992617990449,
+        "buy_order_id": 54078519066872598831708687147728228621,
+        "sell_order_id": 286268099350262709696191488023883738958,
+        "buy_client_id": "cli_805705aa",
+        "sell_client_id": "cli_7f39c6a0",
+        "price": 44,
+        "quantity": 8,
+        "timestamp": 1770979767.5121486
+      }
+    ],
+    "order_id": 286268099350262709696191488023883738958
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 34,
+    "client_id": "cli_3f2b6d21",
+    "price": 33,
+    "remaining_quantity": 34,
+    "trades": [],
+    "order_id": 310772529979343185117475693538312788688
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 13,
+    "client_id": "cli_535f12dd",
+    "price": 41,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 7115069173442032,
+        "buy_order_id": 229250264493030138832261978034965917048,
+        "sell_order_id": 89716051052302484729872633714364330215,
+        "buy_client_id": "cli_a6e7fed0",
+        "sell_client_id": "cli_535f12dd",
+        "price": 334,
+        "quantity": 13,
+        "timestamp": 1771005513.5270476
+      }
+    ],
+    "order_id": 89716051052302484729872633714364330215
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 12,
+    "client_id": "cli_6274e18b",
+    "price": 12,
+    "remaining_quantity": 12,
+    "trades": []
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 24,
+    "client_id": "cli_7d279e43",
+    "price": 12,
+    "remaining_quantity": 24,
+    "trades": []
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 12,
+    "client_id": "cli_63746968",
+    "price": 12,
+    "remaining_quantity": 12,
+    "trades": []
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 12,
+    "client_id": "cli_d64e95ab",
+    "price": 3,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 3599044006092850,
+        "buy_order_id": 229250264493030138832261978034965917048,
+        "sell_order_id": 177353498269468516077190078518304483396,
+        "buy_client_id": "cli_a6e7fed0",
+        "sell_client_id": "cli_d64e95ab",
+        "price": 334,
+        "quantity": 12,
+        "timestamp": "2026-02-13 23:40:47.398256"
+      }
+    ],
+    "order_id": 177353498269468516077190078518304483396
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 31,
+    "client_id": "cli_81a8241d",
+    "price": 12,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 59286946172670140,
+        "buy_order_id": 229250264493030138832261978034965917048,
+        "sell_order_id": 276652492449028559784262426390598259674,
+        "buy_client_id": "cli_a6e7fed0",
+        "sell_client_id": "cli_81a8241d",
+        "price": 334,
+        "quantity": 31,
+        "timestamp": "2026-02-13 23:42:34.943756"
+      }
+    ],
+    "order_id": 276652492449028559784262426390598259674
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 23,
+    "client_id": "cli_f50637c7",
+    "price": 12,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 69823393938397986,
+        "buy_order_id": 229250264493030138832261978034965917048,
+        "sell_order_id": 154615365897557703289351565153981736253,
+        "buy_client_id": "cli_a6e7fed0",
+        "sell_client_id": "cli_f50637c7",
+        "price": 334,
+        "quantity": 5,
+        "timestamp": "2026-02-13 23:43:10.744849"
+      },
+      {
+        "trade_id": 46798632912565769,
+        "buy_order_id": 286268099350262709696191488023883738958,
+        "sell_order_id": 154615365897557703289351565153981736253,
+        "buy_client_id": "cli_7f39c6a0",
+        "sell_client_id": "cli_f50637c7",
+        "price": 23,
+        "quantity": 16,
+        "timestamp": "2026-02-13 23:43:10.745035"
+      },
+      {
+        "trade_id": 93784709569046462,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 154615365897557703289351565153981736253,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_f50637c7",
+        "price": 22,
+        "quantity": 2,
+        "timestamp": "2026-02-13 23:43:10.745076"
+      }
+    ],
+    "order_id": 154615365897557703289351565153981736253
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 12,
+    "client_id": "cli_042d5301",
+    "price": 22,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 18572250605301114,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 57803400461299009157672535533843517425,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_042d5301",
+        "price": 22,
+        "quantity": 12,
+        "timestamp": "2026-02-13 23:43:41.473469"
+      }
+    ],
+    "order_id": 57803400461299009157672535533843517425
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 12,
+    "client_id": "cli_28c556b3",
+    "price": 122,
+    "remaining_quantity": 12,
+    "trades": [],
+    "order_id": 73883142024833685891354810728943831771
+  },
+  {
+    "user": "Alice",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 12,
+    "client_id": "cli_aab86154",
+    "price": 11,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 40622396663161688,
+        "buy_order_id": 73883142024833685891354810728943831771,
+        "sell_order_id": 61867711747387649724587479360721413242,
+        "buy_client_id": "cli_28c556b3",
+        "sell_client_id": "cli_aab86154",
+        "price": 122,
+        "quantity": 12,
+        "timestamp": "2026-02-13 23:46:34.187537"
+      }
+    ],
+    "order_id": 61867711747387649724587479360721413242
+  },
+  {
+    "user": "Alice",
+    "side": "SELL",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 342,
+    "client_id": "cli_7c264038",
+    "price": 23,
+    "remaining_quantity": 342,
+    "trades": []
   }
 ]
