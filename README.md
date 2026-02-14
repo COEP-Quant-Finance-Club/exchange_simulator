@@ -59,14 +59,14 @@ python --version
 
 ``` bash
 git clone https://github.com/COEP-Quant-Finance-Club/exchange_simulator.git
-cd exchange-simulator
+cd exchange_simulator
 ```
 
 ### Windows
 
 ``` powershell
 git clone https://github.com/COEP-Quant-Finance-Club/exchange_simulator.git
-cd exchange-simulator
+cd exchange_simulator
 ```
 
 
