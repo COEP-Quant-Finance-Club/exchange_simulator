@@ -61,7 +61,7 @@ class OrderBook:
             process. The list may be empty if no matches occur.
         """
         trades = []
-        print(self.buy_orders, self.sell_orders)
+        # print(self.buy_orders, self.sell_orders)
         while incoming_order.remaining_quantity > 0 and self.sell_orders: 
             # get the best sell order
             
