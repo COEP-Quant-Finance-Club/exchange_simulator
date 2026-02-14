@@ -57,7 +57,7 @@ class ClientUI:
         - Open sockets directly
         - Load or write files
         """
-
+        self.client_id = generate_client_id()
         self.user = user
         self.session = SessionManager(self.user)
         self.tcp_client = TCPClient(host, port)
@@ -76,7 +76,7 @@ class ClientUI:
         This method controls the lifecycle of the session.
         """
 
-        print(f"Welcome to the Exchange Simulator ,{self.user}")
+        print(f"Welcome to the Exchange Simulator {self.user}")
 
         if not self.tcp_client.connect():
             print("Connection failed")
@@ -165,11 +165,13 @@ class ClientUI:
             "order_type": otype,
             "status": "NEW",
             "quantity": quantity,
-            "client_id": generate_client_id()
+            "client_id": self.client_id
         }
 
         if price is not None:
             order["price"] = price
+        else:
+            order["price"] = 0
 
         return order
 
@@ -206,7 +208,7 @@ class ClientUI:
         """
 
 
-        print("\n--- Engine Response ---")
+        print("\n### Engine Response ###")
 
         if not response.get("accepted", True):
             print("Order rejected")

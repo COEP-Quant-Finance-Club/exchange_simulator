@@ -1,268 +1,139 @@
 # Exchange Simulator
 
-The **Exchange Simulator** is a learning project that shows **how buying and selling happens inside a real stock exchange**, in a very simple and understandable way.
+A terminal-based stock exchange simulator demonstrating how a real
+matching engine works --- including order submission, price-time
+priority matching, order book management, trade logging, and
+session-level history.
 
----
+## Features
 
-## What Is an Exchange?
+-   Limit BUY and SELL orders
+-   Price-Time Priority matching
+-   Partial and full order execution
+-   Persistent order book (pending orders)
+-   Immutable trade ledger
+-   Session-level order history per user
+-   Interactive terminal messages
+-   Multi-client TCP architecture
 
-An exchange is a system where:
-- Some people want to **buy**
-- Some people want to **sell**
-- The system decides:
-  - who trades with whom
-  - at what price
-  - and in what order
 
-In this project:
-- We assume there is **only one stock**
-- Users are **not concerned about which stock** they are buying or selling
+## Requirements
 
-The goal is to understand **how matching works**, not stock names.
+### Install that using requirements.txt
 
----
-
-## What Kind of Orders Are Allowed?
-
-This simulator supports **two simple order types**.
-
----
-
-### 1. Limit Orders
-
-A limit order means:
-- You choose the **price**
-- You choose the **quantity**
-
-Examples:
-- “I want to BUY 10 units at price 100”
-- “I want to SELL 5 units at price 98”
-
-Limit orders are stored in the system and wait until a matching order arrives.
-
----
-
-### 2. Market Orders
-
-A market order means:
-- You choose **only the quantity**
-- You do **not choose the price**
-
-Examples:
-- “BUY 10 units at market price”
-- “SELL 5 units at market price”
-
-What this means:
-- The order is executed **immediately**
-- It matches with the **best available opposite orders**
-- The final price depends on what is available in the system
-
-> A market order guarantees **execution**, not **price**.
-
-Market orders are used when **speed is more important than price**.
-
----
-
-## How Does Matching Work?
-
-A trade happens when:
-- A buyer is willing to pay **the same or higher price**
-- A seller is willing to sell **at that price**
-
-### Simple Rule
-```bash
-If buyer’s price ≥ seller’s price → trade happens
+``` bash
+pip3 install -r requirements.txt
 ```
 
-For **market orders**, this check is automatic because the order accepts the best available price.
 
-If the condition is not satisfied (for limit orders), the orders simply wait.
+# Run Instructions (Windows & Linux)
 
----
+## Prerequisites
 
-## Who Gets Priority?
+-   Python 3.8 or higher
+-   Git (optional, for cloning)
 
-The system follows **two simple priority rules**.
+Check Python:
 
-### Rule 1: Price Priority
-- Buyers offering **higher price** get matched first
-- Sellers asking **lower price** get matched first
+### Linux / macOS
 
-### Rule 2: Time Priority
-- If prices are the same, the **earlier order goes first**
+``` bash
+python3 --version
+```
 
-So:
-- Better price always wins
-- Same price → first come, first served
+### Windows (PowerShell / CMD)
 
-This is how fairness is maintained.
+``` powershell
+python --version
+```
 
----
+------------------------------------------------------------------------
 
-## How the Engine Works (With Examples)
+## 1. Clone the Repository
 
-Think of the engine like a **referee**.  
-It checks orders **one by one** and follows the same rules every time.
+### Linux / macOS
 
----
+``` bash
+git clone https://github.com/COEP-Quant-Finance-Club/exchange_simulator.git
+cd exchange-simulator
+```
 
-### Example 1: No Trade Happens (Limit Orders)
+### Windows
 
-1. BUY 10 units at price 100  
-2. SELL 5 units at price 110  
+``` powershell
+git clone https://github.com/COEP-Quant-Finance-Club/exchange_simulator.git
+cd exchange-simulator
+```
 
-Check:
-- Buyer price = 100
-- Seller price = 110  
+------------------------------------------------------------------------
 
-Since 100 < 110 → no trade
+## 2. Start the Matching Engine (Start FIRST)
 
-Both orders wait.
+### Linux / macOS
 
----
+``` bash
+python3 start_engine.py
+```
 
-### Example 2: Trade Happens (Limit Orders)
+### Windows
 
-3. SELL 6 units at price 95  
+``` powershell
+python start_engine.py
+```
 
-Check:
-- Best buyer = 100
-- Best seller = 95  
+Expected output:
 
-Since 100 ≥ 95 → trade happens
+    Matching Engine started...
+    Listening for client connections...
 
-- Traded quantity = 6
-- Trade price = 95
+------------------------------------------------------------------------
 
-Remaining:
-- Buyer still wants 4 units
-- Seller is fully done
+## 3. Start Client Sessions
 
----
+Open a new terminal for each user.
 
-### Example 3: Market Order Execution
+### Linux / macOS
 
-Waiting orders:
-- SELL 5 units at price 98
-- SELL 5 units at price 100
+``` bash
+python3 start_client.py --user Alice
+```
 
-New order:
-- BUY 8 units at **market price**
+Example:
 
-What happens:
-- Match with SELL 98 → 5 units
-- Match with SELL 100 → 3 units
+``` bash
+python3 start_client.py --user Bob
+```
 
-The market order is completed immediately using the best available prices.
+### Windows
 
----
+``` powershell
+python start_client.py --user Alice
+```
 
-### Example 4: Same Price, Earlier Order First
+Example:
 
-Orders come in this order:
-1. BUY 5 units at price 100  
-2. BUY 5 units at price 100  
+``` powershell
+python start_client.py --user Bob
+```
+## Data Storage
 
-Then:
-3. SELL 6 units at price 100  
+-   Session orders → storage/session_orders/
+-   Trades ledger → storage/trades/trades.json
+-   Logs → storage/logs/system.log
+-   order snapshot → orders_snapshot.json
 
-What happens:
-- First buyer gets 5 units
-- Second buyer gets remaining 1 unit
+## Matching Rules
 
-Earlier order gets priority.
+-   BUY priority → Higher price first
+-   SELL priority → Lower price first
+-   Tie → Earlier timestamp wins
 
----
+Match condition:
 
-### Example 5: One Order Matches Many Orders
+BUY.price >= SELL.price
+for market and limit orders.
 
-Waiting BUY orders:
-- BUY 5 at price 105
-- BUY 5 at price 102
-- BUY 5 at price 100
+## Author
 
-New order:
-- SELL 12 at price 100  
-
-Matching happens step by step:
-- Match with 105 → 5 units
-- Match with 102 → 5 units
-- Match with 100 → 2 units
-
-One order creates **multiple trades**.
-
----
-
-## What Happens After Matching?
-
-An order can be:
-- **Fully completed** → all quantity traded
-- **Partially completed** → some quantity traded
-
-If quantity is left:
-- It stays in the system
-- It waits for future matching orders (only for limit orders)
-
-Market orders never wait. Any unfilled quantity is simply not executed.
-
----
-
-## Important Assumptions (Very Important)
-
-- There is **only ONE stock**
-- We do **not track different users**
-- Orders are processed **one by one**
-- Everything happens **step by step**
-
-This is **not a real multi-user trading system**.  
-It is a **single-flow simulation** built only for learning.
-
----
-
-## Order Life (Very Simple)
-
-Every order goes through only these stages:
-- **NEW** → order just entered
-- **PARTIALLY FILLED** → some quantity matched
-- **FILLED** → completely matched
-
-There is:
-- No cancelling
-- No editing
-
-Simple and clean flow.
-
----
-
-## Trade Record
-
-Every time a trade happens:
-- It is recorded
-- The record is **never changed**
-- The record is **never deleted**
-
-This keeps a clear and honest history of all trades.
-
----
-
-## Simulation Mode
-
-The project can:
-- Automatically create buy and sell orders
-- Send them into the system
-- Show how trades happen step by step
-
-This helps visualize how an exchange behaves.
-
----
-
-## What This Project Is NOT
-
-To keep learning simple, this project does **not** include:
-- Real money
-- Internet usage
-- Multiple stocks
-- Multiple users trading together
-- Complex order types
-
-All of this is avoided on purpose.
+Exchange Simulator Project --- built for learning matching engine
+internals and system design.

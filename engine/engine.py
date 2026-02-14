@@ -5,6 +5,8 @@ import traceback
 from utils.time_utils import generate_timestamp
 from engine.trade import Trade
 from engine.order import Order
+from utils.id_generators import generate_order_id
+from utils.logger import log_trade_server
 from engine.order_store import OrderStore
 
 class ExchangeEngine:
@@ -101,8 +103,8 @@ class ExchangeEngine:
             self._validate_order(incoming_order)
 
             # 2. Assign order ID and timestamp
-            order_id = self._generate_order_id()
-            print(f"this is the actual assigned: {order_id}")
+            order_id = generate_order_id()
+            # print(f"this is the actual assigned: {order_id}")
             timestamp = time.time()
 
             # Copy order to avoid mutating client input
@@ -113,11 +115,15 @@ class ExchangeEngine:
 
             # 3. Process order via order book
             trades, remaining_quantity = self._process_order(order)
+            
+            # 4. Log the trades in the system.
+            for trade in trades:
+                log_trade_server(trade)
 
-            # 4. Emit execution / audit event
+            # 5. Emit execution / audit event
             self._emit_order_event(order, trades, remaining_quantity)
 
-            # 5. Build success response
+            # 4. Build success response
             return self._build_success_response(
                 order_id=order_id,
                 trades=trades,
@@ -156,7 +162,7 @@ class ExchangeEngine:
 
         # IMPORTANT: read from Order object
         remaining_quantity = order.remaining_quantity
-
+        
         return trades, remaining_quantity
     
 
@@ -262,6 +268,7 @@ class ExchangeEngine:
             return
 
         for trade in trades:
+            
             self.trade_writer.enqueue_trade(trade)
 
 

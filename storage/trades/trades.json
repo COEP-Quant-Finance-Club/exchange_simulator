@@ -108,5 +108,75 @@
         "price": 122,
         "quantity": 12,
         "timestamp": "2026-02-13T23:46:34.187537"
+    },
+    {
+        "trade_id": 41189860386860061,
+        "buy_order_id": 170393813994113298910524991296167530704,
+        "sell_order_id": 170393813994113298910524991296167530704,
+        "buy_client_id": "cli_2a233861",
+        "sell_client_id": "cli_dad9c60e",
+        "price": 115,
+        "quantity": 123,
+        "timestamp": "2026-02-14T21:51:53.762174"
+    },
+    {
+        "trade_id": 40552051275203092,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 153640088375268949306870660872062701054,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_1b969531",
+        "price": 22,
+        "quantity": 13,
+        "timestamp": "2026-02-14T21:52:21.064641"
+    },
+    {
+        "trade_id": 69273942228539697,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 130017345446109297464774826644095623209,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_34d201e1",
+        "price": 22,
+        "quantity": 12,
+        "timestamp": "2026-02-14T22:03:56.200149"
+    },
+    {
+        "trade_id": 41917989983048479,
+        "buy_order_id": 170393813994113298910524991296167530704,
+        "sell_order_id": 170393813994113298910524991296167530704,
+        "buy_client_id": "cli_b5fb91cd",
+        "sell_client_id": "cli_dad9c60e",
+        "price": 115,
+        "quantity": 13,
+        "timestamp": "2026-02-14T22:04:14.825783"
+    },
+    {
+        "trade_id": 50931289277263152,
+        "buy_order_id": 216704022847641361313028777641462145712,
+        "sell_order_id": 126403479804784975966287532701695518750,
+        "buy_client_id": "cli_a3a4ff20",
+        "sell_client_id": "cli_017eb7b1",
+        "price": 4444,
+        "quantity": 12,
+        "timestamp": "2026-02-14T22:42:15.190760"
+    },
+    {
+        "trade_id": 49770630122953753,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 84543860592564466590774116340962221406,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_9b532177",
+        "price": 22,
+        "quantity": 12,
+        "timestamp": "2026-02-14T22:53:24.666008"
+    },
+    {
+        "trade_id": 47150354894672774,
+        "buy_order_id": 137702462721907926272225740411695890060,
+        "sell_order_id": 308815455470289461322086935130943600540,
+        "buy_client_id": "cli_9b532177",
+        "sell_client_id": "cli_a28e8a58",
+        "price": 121,
+        "quantity": 12,
+        "timestamp": "2026-02-14T23:00:54.468783"
     }
 ]

@@ -8,7 +8,7 @@
             "side": "BUY",
             "price": 22,
             "quantity": 1244,
-            "remaining_quantity": 626,
+            "remaining_quantity": 563,
             "timestamp": 1770818698.897278,
             "order_type": "LIMIT",
             "status": "PARTIALLY_FILLED"
@@ -26,13 +26,25 @@
             "status": "PARTIALLY_FILLED"
         },
         {
+            "order_id": 140611372876224151143008889539576793748,
+            "client_id": "cli_e3afca2f",
+            "user": "Alice",
+            "side": "SELL",
+            "price": 22,
+            "quantity": 12,
+            "remaining_quantity": 12,
+            "timestamp": 1771090183.2493482,
+            "order_type": "LIMIT",
+            "status": "NEW"
+        },
+        {
             "order_id": 170393813994113298910524991296167530704,
             "client_id": "cli_dad9c60e",
             "user": "bhavesh",
             "side": "SELL",
             "price": 115,
             "quantity": 1555,
-            "remaining_quantity": 1397,
+            "remaining_quantity": 1261,
             "timestamp": 1771006557.7686403,
             "order_type": "LIMIT",
             "status": "PARTIALLY_FILLED"

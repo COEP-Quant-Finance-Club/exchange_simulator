@@ -2,6 +2,7 @@ import socket
 import threading
 import json
 from typing import Optional
+from utils.logger import log_received_order
 
 class TCPServer:    
     """
@@ -115,7 +116,7 @@ class TCPServer:
                     try:
                         # Decode and parse JSON
                         order = json.loads(message.decode('utf-8'))
-                        print(f"Received order from {client_address}: {order}")
+                        log_received_order(client_address, order)
                         
                         # Forward to exchange engine
                         response = self.process_order(order)
