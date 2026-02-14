@@ -16,16 +16,20 @@ session-level history.
 -   Interactive terminal messages
 -   Multi-client TCP architecture
 
-
 ## Requirements
 
-### Install that using requirements.txt
+Install dependencies using requirements.txt:
 
-``` bash
+### Linux / macOS
+
+```bash
 pip3 install -r requirements.txt
 ```
+### Windows
 
-
+```bash
+pip install -r requirements.txt
+```
 # Run Instructions (Windows & Linux)
 
 ## Prerequisites
@@ -65,9 +69,15 @@ git clone https://github.com/COEP-Quant-Finance-Club/exchange_simulator.git
 cd exchange-simulator
 ```
 
-------------------------------------------------------------------------
+
 
 ## 2. Start the Matching Engine (Start FIRST)
+
+#### Note: 
+
+- *Start the matching engine BEFORE starting any client sessions.*
+
+- *Otherwise clients will fail to connect.*
 
 ### Linux / macOS
 
@@ -94,11 +104,11 @@ Open a new terminal for each user.
 
 ### Linux / macOS
 
+Start client for Alice:
 ``` bash
 python3 start_client.py --user Alice
 ```
-
-Example:
+Start another client for Bob:
 
 ``` bash
 python3 start_client.py --user Bob
@@ -106,34 +116,36 @@ python3 start_client.py --user Bob
 
 ### Windows
 
+Start client for Alice:
 ``` powershell
 python start_client.py --user Alice
 ```
 
-Example:
-
+Start another client for Bob:
 ``` powershell
 python start_client.py --user Bob
 ```
 ## Data Storage
 
--   Session orders → storage/session_orders/
--   Trades ledger → storage/trades/trades.json
--   Logs → storage/logs/system.log
--   order snapshot → orders_snapshot.json
+-   Session orders : storage/session_orders/
+-   Trades ledger : storage/trades/trades.json
+-   Logs : storage/logs/system.log
+-   order snapshot : orders_snapshot.json
 
 ## Matching Rules
 
--   BUY priority → Higher price first
--   SELL priority → Lower price first
--   Tie → Earlier timestamp wins
+-   BUY priority : Higher price first
+-   SELL priority : Lower price first
+-   Tie : Earlier timestamp wins
 
-Match condition:
+### Match condition:
+
+Limit orders match when:
 
 BUY.price >= SELL.price
-for market and limit orders.
+
+Market orders match immediately against best available opposite orders.
 
 ## Author
 
-Exchange Simulator Project --- built for learning matching engine
-internals and system design.
+Developed as a learning project to simulate exchange matching engine behavior, order processing, and trade execution.

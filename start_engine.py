@@ -7,7 +7,7 @@ from networking.tcp_server import TCPServer
 
 
 def main():
-    print("[SERVER] Bootstrapping Exchange Engine...")
+    print("[SERVER] Starting Exchange Engine...")
 
     # core components
     order_store = OrderStore()
