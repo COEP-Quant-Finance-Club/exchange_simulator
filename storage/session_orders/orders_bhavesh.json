@@ -725,5 +725,131 @@
       }
     ],
     "order_id": 170393813994113298910524991296167530704
+  },
+  {
+    "user": "bhavesh",
+    "side": "SELL",
+    "order_type": "MARKET",
+    "status": "FILLED",
+    "quantity": 123,
+    "client_id": "cli_2a233861",
+    "price": 0,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 41189860386860061,
+        "buy_order_id": 170393813994113298910524991296167530704,
+        "sell_order_id": 170393813994113298910524991296167530704,
+        "buy_client_id": "cli_2a233861",
+        "sell_client_id": "cli_dad9c60e",
+        "price": 115,
+        "quantity": 123,
+        "timestamp": "2026-02-14 21:51:53.762174"
+      }
+    ],
+    "order_id": 260082168336388255898932306459196415578
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "MARKET",
+    "status": "FILLED",
+    "quantity": 13,
+    "client_id": "cli_1b969531",
+    "price": 0,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 40552051275203092,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 153640088375268949306870660872062701054,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_1b969531",
+        "price": 22,
+        "quantity": 13,
+        "timestamp": "2026-02-14 21:52:21.064641"
+      }
+    ],
+    "order_id": 153640088375268949306870660872062701054
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 12,
+    "client_id": "cli_34d201e1",
+    "price": 14,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 69273942228539697,
+        "buy_order_id": 932018881928267,
+        "sell_order_id": 130017345446109297464774826644095623209,
+        "buy_client_id": "cli_b9135375",
+        "sell_client_id": "cli_34d201e1",
+        "price": 22,
+        "quantity": 12,
+        "timestamp": "2026-02-14 22:03:56.200149"
+      }
+    ],
+    "order_id": 130017345446109297464774826644095623209
+  },
+  {
+    "user": "bhavesh",
+    "side": "SELL",
+    "order_type": "MARKET",
+    "status": "FILLED",
+    "quantity": 13,
+    "client_id": "cli_b5fb91cd",
+    "price": 0,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 41917989983048479,
+        "buy_order_id": 170393813994113298910524991296167530704,
+        "sell_order_id": 170393813994113298910524991296167530704,
+        "buy_client_id": "cli_b5fb91cd",
+        "sell_client_id": "cli_dad9c60e",
+        "price": 115,
+        "quantity": 13,
+        "timestamp": "2026-02-14 22:04:14.825783"
+      }
+    ],
+    "order_id": 145108857785779503976199996711296181495
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "LIMIT",
+    "status": "FILLED",
+    "quantity": 12,
+    "client_id": "cli_017eb7b1",
+    "price": 12,
+    "remaining_quantity": 0,
+    "trades": [
+      {
+        "trade_id": 50931289277263152,
+        "buy_order_id": 216704022847641361313028777641462145712,
+        "sell_order_id": 126403479804784975966287532701695518750,
+        "buy_client_id": "cli_a3a4ff20",
+        "sell_client_id": "cli_017eb7b1",
+        "price": 4444,
+        "quantity": 12,
+        "timestamp": "2026-02-14 22:42:15.190760"
+      }
+    ],
+    "order_id": 126403479804784975966287532701695518750
+  },
+  {
+    "user": "bhavesh",
+    "side": "BUY",
+    "order_type": "MARKET",
+    "status": "NEW",
+    "quantity": 12,
+    "client_id": "cli_f544c307",
+    "price": 0,
+    "remaining_quantity": 12,
+    "trades": []
   }
 ]

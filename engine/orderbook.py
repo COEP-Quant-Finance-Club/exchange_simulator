@@ -1,6 +1,7 @@
 import heapq
 from engine.trade import Trade
 from engine.order import Order
+from utils.logger import *
 from utils.time_utils import generate_timestamp
 from utils.id_generators import generate_trade_id
 import time
@@ -89,7 +90,6 @@ class OrderBook:
                 
                 #appending that object in the trades array
                 trades.append(trade)
-                
                 # remove the order
                 if best_sell_order.remaining_quantity == 0:
                     heapq.heappop(self.sell_orders)
@@ -126,7 +126,7 @@ class OrderBook:
         """
         trades = []
         while incoming_order.remaining_quantity > 0 and self.buy_orders:
-            print("Something is happening.")
+            # print("Something is happening.")
             best_buy_price, best_buy_timestamp, best_buy_order = self.buy_orders[0]
             best_buy_price = -1 * best_buy_price
             if best_buy_price >= incoming_order.price:
@@ -184,7 +184,7 @@ class OrderBook:
             if incoming_order.remaining_quantity > 0:
                 self.add_sell_orders(incoming_order)
         
-        print(trades)
+        
         return trades
     
     @staticmethod
@@ -335,7 +335,7 @@ class OrderBook:
         Returns:
             list[Trade]: Trades generated during matching
         """
-        
+        trades = []
         if incoming_order.side == "BUY":
             trades = self._match_market_sell(incoming_order)
             if incoming_order.remaining_quantity > 0:
@@ -345,6 +345,9 @@ class OrderBook:
             trades = self._match_market_buy(incoming_order)
             if incoming_order.remaining_quantity > 0:
                 self.add_sell_orders(incoming_order)
+        
+        for trade in trades:
+            log_trade_server(trade)
         
         return trades
     
