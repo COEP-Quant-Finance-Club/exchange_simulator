@@ -65,7 +65,7 @@ cd exchange_simulator
 ### Windows
 
 ``` powershell
-git clone https://github.com/COEP-Quant-Finance-Club/exchange_simulator.git
+git clone "https://github.com/COEP-Quant-Finance-Club/exchange_simulator.git"
 cd exchange_simulator
 ```
 
