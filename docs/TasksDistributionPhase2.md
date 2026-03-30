@@ -61,6 +61,7 @@ Features:
 - [ ] Prevent race conditions
 - [ ] Validate order ownership
 
+## Deployement 
 ---
 
 # 2. Ved Bajaj — Backend Architecture + Database + Auth
@@ -266,7 +267,7 @@ Files:
 
 ---
 
-# 7. Member 7 — Documentation + Deployment
+# 7. Member 7 — Documentation
 
 ## Documentation
 
