@@ -19,8 +19,8 @@ Features:
 - Bhavesh — Engine Integration + Order Management + Core Logic
 - Ved Bajaj — Backend Architecture + Database + Authentication
 - Shreyas — Frontend (React)
-- Shreya K — FastAPI Routes (Beginner Friendly)
-- Arnav (FY) — WebSocket + Real-Time Updates
+- Shreya K — FastAPI Routes
+- Arnav  — WebSocket + Real-Time Updates
 - Member 6 — Testing + QA
 - Member 7 — Documentation + Deployment
 
@@ -77,7 +77,7 @@ Features:
 ## Database Setup
 
 - [ ] Setup PostgreSQL / Supabase
-- [ ] Configure ORM (SQLAlchemy)
+- [ ] Configure ORM (SQLAlchemy) (object relational mapping)
 
 ---
 
@@ -101,7 +101,7 @@ Features:
 
 ## User Balance
 
-- [ ] Assign ₹10,00,000 initial balance
+- [ ] Assign ₹15,00,000 initial balance
 
 ---
 
@@ -208,7 +208,7 @@ Files:
 
 ---
 
-# 5. Arnav (FY) — WebSocket + Real-Time
+# 5. Arnav — WebSocket + Real-Time
 
 ## WebSocket Setup
 
@@ -307,3 +307,5 @@ FastAPI Backend
 Matching Engine
         |
     Database
+
+the backend, frontend and websocket person will work together.
