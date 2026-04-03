@@ -68,10 +68,10 @@ Features:
 
 ## Backend Setup
 
-- [ ] Setup FastAPI project
-- [ ] Create main.py
-- [ ] Create routes folder
-- [ ] Initialize engine instance
+- [x] Setup FastAPI project
+- [x] Create main.py
+- [x] Create routes folder
+- [x] Initialize engine instance
 
 ---
 
