@@ -10,10 +10,10 @@ currently the system is only for the one stock.
 
 ## 1. Backend API Layer
 
-- [ ] Set up FastAPI project structure
-- [ ] Create main application entry (`main.py`)
-- [ ] Initialize matching engine instance
-- [ ] Create API route structure (routes folder)
+- [x] Set up FastAPI project structure
+- [x] Create main application entry (`main.py`)
+- [x] Initialize matching engine instance
+- [x] Create API route structure (routes folder)
 - [ ] Implement `POST /order`
   - [ ] Validate request body
   - [ ] Support LIMIT orders
