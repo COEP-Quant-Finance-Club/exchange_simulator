@@ -2,6 +2,7 @@ import socket
 import threading
 import json
 from typing import Optional
+from utils.logger import log_received_order
 
 class TCPServer:    
     """
@@ -49,11 +50,8 @@ class TCPServer:
             
             # Accept clients in a loop
             while self.running:
-                try:
-                    self.accept_client()
-                except Exception as e:
-                    if self.running:
-                        print(f"Error accepting client: {e}")
+                self.accept_client()
+
                     
         except Exception as e:
             print(f"Error starting server: {e}")
@@ -83,7 +81,7 @@ class TCPServer:
                 
         except OSError:
             # Socket was closed, stop accepting
-            pass
+            print("SOcket was closed.")
 
     def handle_client(self, client_socket, client_address):
         """
@@ -118,7 +116,7 @@ class TCPServer:
                     try:
                         # Decode and parse JSON
                         order = json.loads(message.decode('utf-8'))
-                        print(f"Received order from {client_address}: {order}")
+                        log_received_order(client_address, order)
                         
                         # Forward to exchange engine
                         response = self.process_order(order)
@@ -159,44 +157,18 @@ class TCPServer:
                 - remaining_quantity (int)
                 - timestamp (float or str)
         """
+    
         if not self.engine:
-            return {
-                "accepted": False,
-                "order_id": None,
-                "trades": [],
-                "remaining_quantity": order.get("quantity", 0),
-                "timestamp": None,
-                "error": "Exchange engine not initialized"
-            }
-        
+            return {"error": "Engine not initialized"}
+
         try:
-            # Thread-safe engine access
             with self.lock:
-                # Call the engine's method to process the order
-                # Assuming the engine has a method like place_order() or process_order()
-                # Adjust this based on your actual engine implementation
                 response = self.engine.place_order(order)
                 return response
-                
-        except AttributeError:
-            # If engine doesn't have the expected method, return error response
-            return {
-                "accepted": False,
-                "order_id": None,
-                "trades": [],
-                "remaining_quantity": order.get("quantity", 0),
-                "timestamp": None,
-                "error": "Engine method 'place_order' not found"
-            }
+
         except Exception as e:
-            return {
-                "accepted": False,
-                "order_id": None,
-                "trades": [],
-                "remaining_quantity": order.get("quantity", 0),
-                "timestamp": None,
-                "error": f"Engine error: {e}"
-            }
+            return {"error": f"Engine error: {e}"}
+
 
     def send_to_client(self, client_socket, message: dict):
         """
@@ -209,7 +181,7 @@ class TCPServer:
         """
         try:
             # Serialize to JSON and send
-            json_message = json.dumps(message)
+            json_message = json.dumps(message, default=str)
             client_socket.sendall(json_message.encode('utf-8'))
             client_socket.sendall(b'\n')  # Message delimiter
             

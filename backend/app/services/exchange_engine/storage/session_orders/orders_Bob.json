@@ -1,0 +1,14 @@
+[
+  {
+    "user": "Bob",
+    "side": "SELL",
+    "order_type": "LIMIT",
+    "status": "NEW",
+    "quantity": 23,
+    "client_id": "cli_f26b8ba7",
+    "price": 34,
+    "remaining_quantity": 23,
+    "trades": [],
+    "order_id": 308034386281299527562920250329881680804
+  }
+]
